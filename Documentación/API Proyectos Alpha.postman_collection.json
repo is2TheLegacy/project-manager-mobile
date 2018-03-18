@@ -1,0 +1,258 @@
+{
+	"info": {
+		"name": "API Proyectos Alpha",
+		"_postman_id": "029b1101-35e5-441c-b859-3c4bbbf63683",
+		"description": "API Rest del proyecto para IS2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"description": "",
+			"item": [
+				{
+					"name": "Listar Usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios"
+							]
+						},
+						"description": "Lista los usuarios"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Usuario por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios",
+								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"idUsuario\":\"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1\",\n\"alias\":\"raphapy\",\n\"email\":\"rafaelbenegas@gmail.com\",\n\"nombre\":\"Rafael Enrique\",\n\"apellido\":\"Bnegas Castillo\",\n\"sexo\":\"M\"}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Setear Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "new_password",
+									"value": "auricularesrojos2018",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1/credential",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios",
+								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
+								"credential"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Usuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idUsuario\": \"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1\",\n    \"alias\": \"raphapy\",\n    \"email\": \"rafaelbenegas@gmail.com\",\n    \"nombre\": \"Rafael Enrique\",\n    \"apellido\": \"Benegas Castillo\",\n    \"sexo\": \"M\",\n    \"estado\": \"INACTIVO\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios",
+								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Elimina Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios",
+								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user",
+									"value": "raphapy",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "auricularesrojos2018",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/proyectos-alpha/api/sessions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"sessions"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/proyectos-alpha/api/sessions/a904fb68-33b3-4c2b-90eb-4dd61287036b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"sessions",
+								"a904fb68-33b3-4c2b-90eb-4dd61287036b"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
