@@ -1,0 +1,1 @@
+El archivo proyectos_alpha.ndm se debe abrir con Navicat Premium
