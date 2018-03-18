@@ -6,6 +6,7 @@
 package py.fpuna.is2.proyectos.alpha.business.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Basic;
@@ -17,12 +18,14 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -39,6 +42,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Hito.findByFechaEstimadaFin", query = "SELECT h FROM Hito h WHERE h.fechaEstimadaFin = :fechaEstimadaFin")
     , @NamedQuery(name = "Hito.findByFechaRealFin", query = "SELECT h FROM Hito h WHERE h.fechaRealFin = :fechaRealFin")})
 public class Hito implements Serializable {
+
+    @OneToMany(mappedBy = "hito")
+    private Collection<Tarea> tareaCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -175,6 +181,15 @@ public class Hito implements Serializable {
     @Override
     public String toString() {
         return "py.fpuna.is2.proyectos.alpha.model.Hito[ idHito=" + idHito + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Tarea> getTareaCollection() {
+        return tareaCollection;
+    }
+
+    public void setTareaCollection(Collection<Tarea> tareaCollection) {
+        this.tareaCollection = tareaCollection;
     }
     
 }

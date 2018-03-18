@@ -7,7 +7,6 @@ package py.fpuna.is2.proyectos.alpha.business.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,8 +40,9 @@ public class Comentario implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @Lob
     @Column(name = "id_comentario")
-    private UUID idComentario;
+    private Object idComentario;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_creacion")
@@ -63,21 +63,21 @@ public class Comentario implements Serializable {
     public Comentario() {
     }
 
-    public Comentario(UUID idComentario) {
+    public Comentario(Object idComentario) {
         this.idComentario = idComentario;
     }
 
-    public Comentario(UUID idComentario, Date fechaCreacion, String contenido) {
+    public Comentario(Object idComentario, Date fechaCreacion, String contenido) {
         this.idComentario = idComentario;
         this.fechaCreacion = fechaCreacion;
         this.contenido = contenido;
     }
 
-    public UUID getIdComentario() {
+    public Object getIdComentario() {
         return idComentario;
     }
 
-    public void setIdComentario(UUID idComentario) {
+    public void setIdComentario(Object idComentario) {
         this.idComentario = idComentario;
     }
 
@@ -135,7 +135,7 @@ public class Comentario implements Serializable {
 
     @Override
     public String toString() {
-        return "py.fpuna.is2.proyectos.alpha.model.Comentario[ idComentario=" + idComentario + " ]";
+        return "py.fpuna.is2.proyectos.alpha.business.model.Comentario[ idComentario=" + idComentario + " ]";
     }
     
 }

@@ -6,9 +6,9 @@ CREATE TABLE "usuario" (
 "apellido" varchar(100),
 "sexo" varchar(1),
 "fecha_creacion" timestamp NOT NULL,
-"password_salt" varchar(8) NOT NULL,
-"password" varchar(256) NOT NULL,
-"estado" varchar(10) NOT NULL DEFAULT 'ACTIVO',
+"password_salt" varchar(32) NOT NULL DEFAULT 'none',
+"password" varchar(64) NOT NULL DEFAULT 'none',
+"estado" varchar(10) NOT NULL DEFAULT 'INACTIVO',
 PRIMARY KEY ("id_usuario") ,
 CONSTRAINT "uq_nombre_usuario" UNIQUE ("alias"),
 CONSTRAINT "uq_email" UNIQUE ("email")
@@ -91,6 +91,8 @@ CREATE TABLE "tarea" (
 "id_tarea" uuid NOT NULL,
 "nombre" varchar(200) NOT NULL,
 "descripcion" varchar(2000) NOT NULL,
+"proyecto" uuid NOT NULL,
+"hito" uuid,
 "usuario_creador" uuid NOT NULL,
 "fecha_creacion" timestamp NOT NULL,
 "usuario_asignado" uuid,
@@ -117,6 +119,14 @@ CREATE TABLE "comentario" (
 PRIMARY KEY ("id_comentario") 
 );
 
+CREATE TABLE "token_autorizacion" (
+"token" uuid NOT NULL,
+"usuario" uuid NOT NULL,
+"expirado" bool NOT NULL,
+"fecha_creacion" timestamp NOT NULL,
+PRIMARY KEY ("token") 
+);
+
 
 ALTER TABLE "miembro_proyecto" ADD CONSTRAINT "fk_miembro_proyecto_rol_proyecto_1" FOREIGN KEY ("rol") REFERENCES "rol_proyecto" ("id_rol_proyecto");
 COMMENT ON CONSTRAINT "fk_miembro_proyecto_rol_proyecto_1" ON "miembro_proyecto" IS 'Un usuario miembro cumple un solo rol dentro del proyecto';
@@ -134,4 +144,7 @@ ALTER TABLE "tarea" ADD CONSTRAINT "fk_tarea_usuario_2" FOREIGN KEY ("usuario_as
 ALTER TABLE "comentario" ADD CONSTRAINT "fk_comentario_tarea_1" FOREIGN KEY ("tarea") REFERENCES "tarea" ("id_tarea");
 ALTER TABLE "comentario" ADD CONSTRAINT "fk_comentario_usuario_1" FOREIGN KEY ("usuario_creador") REFERENCES "usuario" ("id_usuario");
 ALTER TABLE "miembro_proyecto" ADD CONSTRAINT "fk_miembro_proyecto_proyecto_1" FOREIGN KEY ("proyecto") REFERENCES "proyecto" ("id_proyecto");
+ALTER TABLE "token_autorizacion" ADD CONSTRAINT "fk_token_autorizacion_usuario_1" FOREIGN KEY ("usuario") REFERENCES "usuario" ("id_usuario");
+ALTER TABLE "tarea" ADD CONSTRAINT "fk_tarea_proyecto_1" FOREIGN KEY ("proyecto") REFERENCES "proyecto" ("id_proyecto");
+ALTER TABLE "tarea" ADD CONSTRAINT "fk_tarea_hito_1" FOREIGN KEY ("hito") REFERENCES "hito" ("id_hito");
 

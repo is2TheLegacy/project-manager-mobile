@@ -5,6 +5,7 @@
  */
 package py.fpuna.is2.proyectos.alpha.business.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -46,6 +47,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Usuario.findByEstado", query = "SELECT u FROM Usuario u WHERE u.estado = :estado")})
 public class Usuario implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private Collection<TokenAutorizacion> tokenAutorizacionCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -72,25 +76,19 @@ public class Usuario implements Serializable {
     @Size(max = 1)
     @Column(name = "sexo")
     private String sexo;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "fecha_creacion")
+    @JsonIgnore
+    @Column(name = "fecha_creacion", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 8)
-    @Column(name = "password_salt")
+    @Column(name = "password_salt", insertable = false, updatable = false)
+    @JsonIgnore
     private String passwordSalt;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 256)
-    @Column(name = "password")
+    @JsonIgnore
+    @Column(name = "password", insertable = false, updatable = false)
     private String password;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 10)
-    @Column(name = "estado")
+    @Column(name = "estado", insertable = false)
     private String estado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioCreador")
     private Collection<Tarea> tareaCollection;
@@ -301,6 +299,15 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         return "py.fpuna.is2.proyectos.alpha.model.Usuario[ idUsuario=" + idUsuario + " ]";
+    }
+
+    @XmlTransient
+    public Collection<TokenAutorizacion> getTokenAutorizacionCollection() {
+        return tokenAutorizacionCollection;
+    }
+
+    public void setTokenAutorizacionCollection(Collection<TokenAutorizacion> tokenAutorizacionCollection) {
+        this.tokenAutorizacionCollection = tokenAutorizacionCollection;
     }
     
 }

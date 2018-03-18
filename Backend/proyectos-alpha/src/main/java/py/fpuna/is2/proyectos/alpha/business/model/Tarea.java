@@ -8,6 +8,7 @@ package py.fpuna.is2.proyectos.alpha.business.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -49,10 +50,14 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Tarea.findByFechaEstimadaInicio", query = "SELECT t FROM Tarea t WHERE t.fechaEstimadaInicio = :fechaEstimadaInicio")})
 public class Tarea implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tarea")
+    private Collection<Comentario> comentarioCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
+    @Lob
     @Column(name = "id_tarea")
     private UUID idTarea;
     @Basic(optional = false)
@@ -96,14 +101,18 @@ public class Tarea implements Serializable {
     @Column(name = "fecha_estimada_inicio")
     @Temporal(TemporalType.DATE)
     private Date fechaEstimadaInicio;
+    @JoinColumn(name = "hito", referencedColumnName = "id_hito")
+    @ManyToOne
+    private Hito hito;
+    @JoinColumn(name = "proyecto", referencedColumnName = "id_proyecto")
+    @ManyToOne(optional = false)
+    private Proyecto proyecto;
     @JoinColumn(name = "usuario_creador", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario usuarioCreador;
     @JoinColumn(name = "usuario_asignado", referencedColumnName = "id_usuario")
     @ManyToOne
     private Usuario usuarioAsignado;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tarea")
-    private Collection<Comentario> comentarioCollection;
 
     public Tarea() {
     }
@@ -210,6 +219,22 @@ public class Tarea implements Serializable {
         this.fechaEstimadaInicio = fechaEstimadaInicio;
     }
 
+    public Hito getHito() {
+        return hito;
+    }
+
+    public void setHito(Hito hito) {
+        this.hito = hito;
+    }
+
+    public Proyecto getProyecto() {
+        return proyecto;
+    }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+    }
+
     public Usuario getUsuarioCreador() {
         return usuarioCreador;
     }
@@ -226,6 +251,38 @@ public class Tarea implements Serializable {
         this.usuarioAsignado = usuarioAsignado;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.idTarea);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Tarea other = (Tarea) obj;
+        if (!Objects.equals(this.idTarea, other.idTarea)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+
+    @Override
+    public String toString() {
+        return "py.fpuna.is2.proyectos.alpha.business.model.Tarea[ idTarea=" + idTarea + " ]";
+    }
+
     @XmlTransient
     public Collection<Comentario> getComentarioCollection() {
         return comentarioCollection;
@@ -233,31 +290,6 @@ public class Tarea implements Serializable {
 
     public void setComentarioCollection(Collection<Comentario> comentarioCollection) {
         this.comentarioCollection = comentarioCollection;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idTarea != null ? idTarea.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Tarea)) {
-            return false;
-        }
-        Tarea other = (Tarea) object;
-        if ((this.idTarea == null && other.idTarea != null) || (this.idTarea != null && !this.idTarea.equals(other.idTarea))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "py.fpuna.is2.proyectos.alpha.model.Tarea[ idTarea=" + idTarea + " ]";
     }
     
 }

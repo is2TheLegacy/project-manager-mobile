@@ -45,6 +45,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Proyecto.findByEstado", query = "SELECT p FROM Proyecto p WHERE p.estado = :estado")})
 public class Proyecto implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto")
+    private Collection<Tarea> tareaCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -227,6 +230,15 @@ public class Proyecto implements Serializable {
     @Override
     public String toString() {
         return "py.fpuna.is2.proyectos.alpha.model.Proyecto[ idProyecto=" + idProyecto + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Tarea> getTareaCollection() {
+        return tareaCollection;
+    }
+
+    public void setTareaCollection(Collection<Tarea> tareaCollection) {
+        this.tareaCollection = tareaCollection;
     }
     
 }
