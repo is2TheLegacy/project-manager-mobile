@@ -1,7 +1,7 @@
 {
 	"info": {
-		"name": "API Proyectos Alpha",
 		"_postman_id": "029b1101-35e5-441c-b859-3c4bbbf63683",
+		"name": "API Proyectos Alpha",
 		"description": "API Rest del proyecto para IS2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -17,12 +17,13 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios",
+							"raw": "http://raphapy.tk:18080/proyectos-alpha/api/usuarios",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"raphapy",
+								"tk"
 							],
-							"port": "8080",
+							"port": "18080",
 							"path": [
 								"proyectos-alpha",
 								"api",
@@ -30,30 +31,6 @@
 							]
 						},
 						"description": "Lista los usuarios"
-					},
-					"response": []
-				},
-				{
-					"name": "Obtener Usuario por ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {},
-						"url": {
-							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"proyectos-alpha",
-								"api",
-								"usuarios",
-								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
-							]
-						},
-						"description": ""
 					},
 					"response": []
 				},
@@ -72,19 +49,99 @@
 							"raw": "{\"idUsuario\":\"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1\",\n\"alias\":\"raphapy\",\n\"email\":\"rafaelbenegas@gmail.com\",\n\"nombre\":\"Rafael Enrique\",\n\"apellido\":\"Bnegas Castillo\",\n\"sexo\":\"M\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios",
+							"raw": "http://raphapy.tk:18080/proyectos-alpha/api/usuarios",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"raphapy",
+								"tk"
 							],
-							"port": "8080",
+							"port": "18080",
 							"path": [
 								"proyectos-alpha",
 								"api",
 								"usuarios"
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Usuario por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://raphapy.tk:18080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
+							"protocol": "http",
+							"host": [
+								"raphapy",
+								"tk"
+							],
+							"port": "18080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios",
+								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Usuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idUsuario\": \"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1\",\n    \"alias\": \"raphapy\",\n    \"email\": \"rafaelbenegas@gmail.com\",\n    \"nombre\": \"Rafael Enrique\",\n    \"apellido\": \"Benegas Castillo\",\n    \"sexo\": \"M\",\n    \"estado\": \"INACTIVO\"\n}"
 						},
-						"description": ""
+						"url": {
+							"raw": "http://raphapy.tk:18080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
+							"protocol": "http",
+							"host": [
+								"raphapy",
+								"tk"
+							],
+							"port": "18080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios",
+								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Elimina Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://raphapy.tk:18080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
+							"protocol": "http",
+							"host": [
+								"raphapy",
+								"tk"
+							],
+							"port": "18080",
+							"path": [
+								"proyectos-alpha",
+								"api",
+								"usuarios",
+								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -110,12 +167,13 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1/credential",
+							"raw": "http://raphapy.tk:18080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1/credential",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"raphapy",
+								"tk"
 							],
-							"port": "8080",
+							"port": "18080",
 							"path": [
 								"proyectos-alpha",
 								"api",
@@ -123,64 +181,7 @@
 								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
 								"credential"
 							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Modificar Usuario",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"idUsuario\": \"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1\",\n    \"alias\": \"raphapy\",\n    \"email\": \"rafaelbenegas@gmail.com\",\n    \"nombre\": \"Rafael Enrique\",\n    \"apellido\": \"Benegas Castillo\",\n    \"sexo\": \"M\",\n    \"estado\": \"INACTIVO\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"proyectos-alpha",
-								"api",
-								"usuarios",
-								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Elimina Usuario",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {},
-						"url": {
-							"raw": "http://localhost:8080/proyectos-alpha/api/usuarios/f2135cc2-b4f2-4743-a29d-f2c22e8b49b1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"proyectos-alpha",
-								"api",
-								"usuarios",
-								"f2135cc2-b4f2-4743-a29d-f2c22e8b49b1"
-							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -212,19 +213,19 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/proyectos-alpha/api/sessions",
+							"raw": "http://raphapy.tk:18080/proyectos-alpha/api/sessions",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"raphapy",
+								"tk"
 							],
-							"port": "8080",
+							"port": "18080",
 							"path": [
 								"proyectos-alpha",
 								"api",
 								"sessions"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -235,20 +236,20 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8080/proyectos-alpha/api/sessions/a904fb68-33b3-4c2b-90eb-4dd61287036b",
+							"raw": "http://raphapy.tk:18080/proyectos-alpha/api/sessions/a904fb68-33b3-4c2b-90eb-4dd61287036b",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"raphapy",
+								"tk"
 							],
-							"port": "8080",
+							"port": "18080",
 							"path": [
 								"proyectos-alpha",
 								"api",
 								"sessions",
 								"a904fb68-33b3-4c2b-90eb-4dd61287036b"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
