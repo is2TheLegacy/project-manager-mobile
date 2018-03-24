@@ -7,7 +7,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 /**
- * Created by konecta on 04/03/18.
+ *
+ * @author federico.torres
  */
 
 public interface TestService {

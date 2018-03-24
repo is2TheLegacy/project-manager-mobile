@@ -20,15 +20,16 @@ import android.widget.Toast;
 import alpha.proyectos.is2.fpuna.py.alpha.service.LoginService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.RespuestaLogin;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * A login screen that offers login via email/password.
+ *
+ * @author federico.torres
  */
 public class LoginActivity extends AppCompatActivity implements Callback<RespuestaLogin> {
-
 
     // UI references.
     private AutoCompleteTextView mUsernameView;
@@ -36,10 +37,14 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
     private View mProgressView;
     private View mLoginFormView;
 
+    private PreferenceUtils preferenceUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        preferenceUtils = new PreferenceUtils(LoginActivity.this);
 
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -57,52 +62,68 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
     }
 
     private void login() {
-        String email = mUsernameView.getText().toString();
+        String userName = mUsernameView.getText().toString();
         String password = mPasswordView.getText().toString();
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(userName)) {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
-        }/* else if (!isEmailValid(email)) {
-            mUsernameView.setError(getString(R.string.error_invalid_email));
-            focusView = mUsernameView;
+        } else if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
             cancel = true;
-        }*/
+        }
 
         if (cancel) {
             focusView.requestFocus();
         } else {
             showProgress(true);
             LoginService service = (LoginService) ServiceBuilder.create(LoginService.class);
-            Call<RespuestaLogin> call = service.login(email, password);
+            Call<RespuestaLogin> call = service.login(userName, password);
             call.enqueue(this);
         }
 
     }
 
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+    @Override
+    public void onResponse(Call<RespuestaLogin> call, Response<RespuestaLogin> response) {
+        showProgress(false);
+        if (response.isSuccessful()) {
+            RespuestaLogin res = response.body();
+            if (response.code() == 200) {
+                Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+                startActivity(i);
+                preferenceUtils.login();
+                finish();
+            } else {
+                if (response.body() != null && response.body().getMessages() != null) {
+                    String msg = response.body().getMessages().get(0);
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Error al iniciar session", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            if (response.body() != null && response.body().getMessages() != null) {
+                String msg = response.body().getMessages().get(0);
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error al llamar al servicio", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+    @Override
+    public void onFailure(Call<RespuestaLogin> call, Throwable t) {
+        showProgress(false);
+        Toast.makeText(this, "Ocurrio un error al llamar al Servidor", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -124,44 +145,9 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
                 }
             });
         } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-    }
-
-
-    @Override
-    public void onResponse(Call<RespuestaLogin> call, Response<RespuestaLogin> response) {
-        showProgress(false);
-        if (response.isSuccessful()) {
-            RespuestaLogin res = response.body();
-            if (res.getStatus() == 200) {
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(i);
-            } else {
-                if (response.body() != null && response.body().getMessages() != null) {
-                    String msg = response.body().getMessages().get(0);
-                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Error al llamar al servicio", Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else {
-            if (response.body() != null && response.body().getMessages() != null) {
-                String msg = response.body().getMessages().get(0);
-                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Error al llamar al servicio", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onFailure(Call<RespuestaLogin> call, Throwable t) {
-        showProgress(false);
-        Toast.makeText(this, "Ocurrio un error al llamar al Servidor", Toast.LENGTH_SHORT).show();
     }
 }
 

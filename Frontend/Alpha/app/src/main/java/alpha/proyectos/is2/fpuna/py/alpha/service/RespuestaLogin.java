@@ -3,7 +3,8 @@ package alpha.proyectos.is2.fpuna.py.alpha.service;
 import java.util.List;
 
 /**
- * Created by konecta on 20/03/18.
+ *
+ * @author federico.torres
  */
 
 public class RespuestaLogin {

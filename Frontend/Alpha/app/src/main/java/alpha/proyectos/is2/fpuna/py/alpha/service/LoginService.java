@@ -1,7 +1,5 @@
 package alpha.proyectos.is2.fpuna.py.alpha.service;
 
-import java.util.List;
-
 import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -11,7 +9,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
- * Created by konecta on 04/03/18.
+ *
+ * @author federico.torres
  */
 
 public interface LoginService {

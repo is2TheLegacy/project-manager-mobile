@@ -1,7 +1,8 @@
 package alpha.proyectos.is2.fpuna.py.alpha;
 
 /**
- * Created by konecta on 20/03/18.
+ *
+ * @author federico.torres
  */
 
 public class Constantes {

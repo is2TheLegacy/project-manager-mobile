@@ -12,6 +12,10 @@ import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ *
+ * @author federico.torres
+ */
 public class ServiceBuilder {
 
     public static Object create(Class<?> cls) {
