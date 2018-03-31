@@ -21,6 +21,7 @@ import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import py.fpuna.is2.proyectos.alpha.service.exceptions.ApplicationException;
+import py.fpuna.is2.proyectos.alpha.service.security.LoginEntity;
 import py.fpuna.is2.proyectos.alpha.service.security.LoginException;
 import py.fpuna.is2.proyectos.alpha.service.security.UserAuthorizator;
 
@@ -39,18 +40,14 @@ public class LoginService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(@FormParam("user") String username, @FormParam("password") String password) throws ApplicationException {
         try {
-            String authToken = authenticator.login(username, password);
-
-            JsonObjectBuilder jsonObjBuilder = Json.createObjectBuilder();
-            jsonObjBuilder.add("auth_token", authToken);
-            JsonObject jsonObj = jsonObjBuilder.build();
+            LoginEntity loginResult = authenticator.login(username, password);
 
             CacheControl cc = new CacheControl();
             cc.setNoCache(true);
             cc.setMaxAge(-1);
             cc.setMustRevalidate(true);
 
-            return Response.ok(jsonObj.toString()).cacheControl(cc).build();
+            return Response.ok(loginResult).cacheControl(cc).build();
         } catch (LoginException ex) {
             throw new ApplicationException.IllegalArgument(ex.getMessage());
         }

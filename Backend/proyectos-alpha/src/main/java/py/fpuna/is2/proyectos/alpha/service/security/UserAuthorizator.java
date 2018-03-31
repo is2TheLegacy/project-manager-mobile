@@ -7,9 +7,11 @@ package py.fpuna.is2.proyectos.alpha.service.security;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Logger;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import py.fpuna.is2.proyectos.alpha.business.model.TokenAutorizacion;
@@ -23,7 +25,9 @@ import py.fpuna.is2.proyectos.alpha.utils.SecurityUtil;
 
 @Singleton
 public class UserAuthorizator {
-
+    
+    private static final Logger LOG = Logger.getLogger(UserAuthorizator.class.getName());
+    
     @PersistenceContext(unitName = "py.fpuna.is2_proyectos-alpha_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -33,12 +37,18 @@ public class UserAuthorizator {
     @Inject
     private TokenAutorizacionService authorizationTokensStorage;
 
-    public String login(String username, String password) throws LoginException, ApplicationException {
+    public LoginEntity login(String username, String password) throws LoginException, ApplicationException {
 
         try {
             Query q = em.createNamedQuery("Usuario.findByAlias", Usuario.class);
             q.setParameter("alias", username);
-            Usuario user = (Usuario) q.getSingleResult();
+            Usuario user = null;
+            try {
+                user = (Usuario) q.getSingleResult();
+            } catch(NoResultException e) {
+                //ignore
+            }
+            
             ServiceAssertions.assertNotNullOrEmpty(user, "El usuario no existe");
             ServiceAssertions.assertTrue("ACTIVO".equalsIgnoreCase(user.getEstado()), "La cuenta está inactivada");
 
@@ -53,7 +63,8 @@ public class UserAuthorizator {
             
             authorizationTokensStorage.create(token);
 
-            return token.getToken().toString();
+            return new LoginEntity(token.getToken(), user);
+            
         } catch (SecurityException ex) {
             throw new LoginException(ex.getMessage());
         }
