@@ -8,4 +8,10 @@
     tools:context="alpha.proyectos.is2.fpuna.py.alpha.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+
+    <include
+        layout="@layout/nav_header_main"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp" />
+
 </android.support.constraint.ConstraintLayout>

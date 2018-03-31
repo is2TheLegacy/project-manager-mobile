@@ -1,22 +1,11 @@
 <resources>
-    <string name="app_name">Alpha</string>
-    <string name="title_activity_main">MainActivity</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
-
+    <string name="app_name">Gestor de Proyectos Alpha</string>
+    <string name="title_activity_main">Proyectos</string>
+    <string name="action_exit">Salir</string>
+    <string name="action_sign_in">Iniciar session</string>
     <string name="prompt_username">Usuario</string>
 	<string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Iniciar session</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-	<string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="action_create_account">Crear una cuenta</string>
 </resources>
