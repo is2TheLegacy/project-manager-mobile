@@ -1,6 +1,7 @@
 package alpha.proyectos.is2.fpuna.py.alpha;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,8 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
+import alpha.proyectos.is2.fpuna.py.alpha.service.login.LoginService;
 import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  *
@@ -39,14 +48,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
         preferenceUtils = new PreferenceUtils(BaseActivity.this);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ;
-            }
-        });*/
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -56,7 +57,12 @@ public abstract class BaseActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
+        View hView =  navigationView.getHeaderView(0);
 
+        SharedPreferences prefs = getSharedPreferences(Constantes.PROYECTOS_ALPHA_PREFS_NAME, 0);
+
+        TextView nombre = (TextView) hView.findViewById(R.id.header_nombre);
+        nombre.setText(prefs.getString(Constantes.SESSION_NOMBRE, "") + " "+prefs.getString(Constantes.SESSION_APELLIDO, ""));
         inint();
     }
 
@@ -105,28 +111,32 @@ public abstract class BaseActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        System.err.println("Item del menu seleccionado : " + id);
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.logout) {
 
-            //Intent i = new Intent(BaseActivity.this, ImportActivity.class);
-            //startActivity(i);
+            final SharedPreferences prefs = getSharedPreferences(Constantes.PROYECTOS_ALPHA_PREFS_NAME,0);
 
-        } else if (id == R.id.nav_gallery) {
+            LoginService service = (LoginService) ServiceBuilder.create(LoginService.class);
+            Call<ResponseBody> call = service.logout(prefs.getString(Constantes.SESSION_AUTH_TOKEN,""));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-            //Intent i = new Intent(BaseActivity.this, GalleryActivity.class);
-            //startActivity(i);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.clear();
+                    editor.commit();
 
-        } else if (id == R.id.nav_slideshow) {
-            ;
-        } else if (id == R.id.nav_manage) {
-            ;
-        } else if (id == R.id.logout) {
+                    Intent i = new Intent(BaseActivity.this, LoginActivity.class);
+                    startActivity(i);
+                }
 
-            Intent i = new Intent(BaseActivity.this, LoginActivity.class);
-            startActivity(i);
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(BaseActivity.this, R.string.msg_error_logout, Toast.LENGTH_SHORT).show();
+                }
+            });
+
             preferenceUtils.logout();
-            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

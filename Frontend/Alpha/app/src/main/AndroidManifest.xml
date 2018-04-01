@@ -32,7 +32,7 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="Alpha">
+            android:label="Gestor de proyectos Alpha">
         </activity>
 
     </application>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_invalid_email">Email no válido</string>
+    <string name="error_invalid_password">Contraseña muy corta</string>
+    <string name="error_incorrect_password">Contraseña incorrecta</string>
+    <string name="error_field_required">Campo requerido</string>
+    <string name="msg_error_logout">No se pudo finalizar la sesión. Inténtelo nuevamente más tarde.</string>
+    <string name="msg_error_login">No se puede iniciar sesión. Inténtelo nuevamente más tarde.</string>
+</resources>

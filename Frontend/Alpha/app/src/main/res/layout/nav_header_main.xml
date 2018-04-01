@@ -14,18 +14,24 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="0dip"
-        android:layout_weight="30"
+        android:layout_width="16dp"
         android:layout_height="wrap_content"
+        android:layout_weight="30"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:srcCompat="@mipmap/ic_account_circle" />
 
-    <TextView
-        android:layout_width="0dip"
+    <LinearLayout
         android:layout_weight="70"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Juan Perez"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/header_nombre"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"/>
+
+    </LinearLayout>
 
 </LinearLayout>
