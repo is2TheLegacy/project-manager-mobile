@@ -35,6 +35,11 @@
             android:label="Gestor de proyectos Alpha">
         </activity>
 
+        <activity
+            android:name=".activity.CrearUsuarioActivity"
+            android:label="Crear Usuario">
+        </activity>
+
     </application>
 
 </manifest>

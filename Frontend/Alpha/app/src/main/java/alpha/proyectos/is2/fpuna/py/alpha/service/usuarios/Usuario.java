@@ -7,18 +7,28 @@ import java.util.UUID;
  */
 
 public class Usuario {
-    private UUID idUsuario;
+
+    private String idUsuario;
     private String alias;
     private String email;
     private String nombre;
     private String apellido;
     private String sexo;
 
-    public UUID getIdUsuario() {
+    public Usuario(String idUsuario, String alias, String email, String nombre, String apellido, String sexo) {
+        this.idUsuario = idUsuario;
+        this.alias = alias;
+        this.email = email;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.sexo = sexo;
+    }
+
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(UUID idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 

@@ -9,6 +9,7 @@
 
     <string name="title_activity_splash_screen">Gestor de Proyectos Alpha</string>
 
+    <string name="action_cancelar">Cancelar</string>
     <string name="prompt_username">Usuario</string>
 	<string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -18,4 +19,13 @@
         completions."
     </string>
     <string name="action_create_account">Crear una cuenta</string>
+
+    <!-- Registro de usuario -->
+    <string name="action_registrar_usuario">Registrar</string>
+    <string name="prompt_nombre">Nombre</string>
+    <string name="prompt_apellido">Apellido</string>
+    <string name="prompt_alias">Alias</string>
+    <string name="prompt_sexo">Sexo</string>
+    <string name="prompt_confirmar_password">Confirmar Password</string>
+
 </resources>

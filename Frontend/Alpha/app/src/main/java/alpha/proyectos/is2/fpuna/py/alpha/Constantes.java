@@ -10,6 +10,9 @@ public class Constantes {
     public static final String API_SERVER = "http://raphapy.tk:18080";
     public static final String BASE_URL_API = "/proyectos-alpha/api";
 
+    //public static final String API_SERVER = "http://192.168.0.14:8080";
+    //public static final String BASE_URL_API = "/TestRest/api";
+
     //shared preferences keys
     public static final String PROYECTOS_ALPHA_PREFS_NAME = "ProyectosAlphaPrefs";
     public static final String SESSION_AUTH_TOKEN = "session.authToken";

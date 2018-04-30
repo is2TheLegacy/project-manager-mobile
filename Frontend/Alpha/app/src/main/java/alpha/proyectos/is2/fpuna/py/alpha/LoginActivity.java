@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
+import alpha.proyectos.is2.fpuna.py.alpha.activity.CrearUsuarioActivity;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.login.LoginService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.login.RespuestaLogin;
@@ -31,7 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- *
+ * Pantalla de Login
  * @author federico.torres
  */
 public class LoginActivity extends AppCompatActivity implements Callback<RespuestaLogin> {
@@ -59,6 +60,15 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
             @Override
             public void onClick(View view) {
                 login();
+            }
+        });
+
+        Button cearCuentaButton = (Button) findViewById(R.id.button_cear_cuenta);
+        cearCuentaButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this, CrearUsuarioActivity.class);
+                startActivity(i);
             }
         });
 
@@ -102,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
                 SharedPreferences prefs = getSharedPreferences(Constantes.PROYECTOS_ALPHA_PREFS_NAME, 0);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(Constantes.SESSION_AUTH_TOKEN, res.getAuthToken().toString());
-                editor.putString(Constantes.SESSION_ID_USUARIO, res.getUser().getIdUsuario().toString());
+                //editor.putString(Constantes.SESSION_ID_USUARIO, res.getUser().getIdUsuario().toString());
                 editor.putString(Constantes.SESSION_ALIAS, res.getUser().getAlias());
                 editor.putString(Constantes.SESSION_NOMBRE, res.getUser().getNombre());
                 editor.putString(Constantes.SESSION_APELLIDO, res.getUser().getApellido());
