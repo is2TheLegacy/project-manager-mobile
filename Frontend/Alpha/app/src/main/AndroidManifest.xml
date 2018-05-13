@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activity.SplashScreenActivity"
             android:label="@string/title_activity_splash_screen"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -25,13 +25,13 @@
         </activity>
 
         <activity
-            android:name=".DashboardActivity"
+            android:name=".activity.DashboardActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:label="Gestor de proyectos Alpha">
         </activity>
 
@@ -39,6 +39,14 @@
             android:name=".activity.CrearUsuarioActivity"
             android:label="Crear Usuario">
         </activity>
+
+        <activity 
+            android:name=".activity.ListaTareasActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.CrearTareaActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

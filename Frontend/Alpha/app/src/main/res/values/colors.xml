@@ -3,6 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorAccentOpaque">#CCFF4081</color>
     <color name="linea">#d1d5da</color>
     <color name="edit_text_backgorung">#f2f2f2</color>
+    <color name="titulo">#0099ff</color>
+    <color name="descripcion">#d6d6c2</color>
 </resources>

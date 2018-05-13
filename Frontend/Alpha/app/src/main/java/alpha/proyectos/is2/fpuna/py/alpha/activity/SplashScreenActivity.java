@@ -1,17 +1,13 @@
-package alpha.proyectos.is2.fpuna.py.alpha;
+package alpha.proyectos.is2.fpuna.py.alpha.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 
 /**
@@ -39,7 +35,7 @@ public class SplashScreenActivity extends Activity {
 
             @Override
             public void run() {
-                Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);// LoginActivity.class);
                 if (preferenceUtils.isLoggedIn()) {
                     i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 }

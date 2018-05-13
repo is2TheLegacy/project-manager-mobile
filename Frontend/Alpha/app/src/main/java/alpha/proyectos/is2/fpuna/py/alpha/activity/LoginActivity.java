@@ -1,4 +1,4 @@
-package alpha.proyectos.is2.fpuna.py.alpha;
+package alpha.proyectos.is2.fpuna.py.alpha.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -22,7 +22,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-import alpha.proyectos.is2.fpuna.py.alpha.activity.CrearUsuarioActivity;
+import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
+import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.login.LoginService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.login.RespuestaLogin;
@@ -183,5 +184,6 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
             return super.onKeyDown(keyCode, event);
         }
     }
+
 }
 

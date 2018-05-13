@@ -28,4 +28,17 @@
     <string name="prompt_sexo">Sexo</string>
     <string name="prompt_confirmar_password">Confirmar Password</string>
 
+    <string name="action_agregar">Agregar</string>
+    <string name="action_eliminar">Eliminar</string>
+
+    <string name="action_guardar">Guardar</string>
+
+    <string name="prompt_descripcion">Descripción</string>
+    <string name="prompt_fecha_inicio">Inicio</string>
+    <string name="prompt_fecha_fin">Finalización</string>
+
+    <string name="prompt_fecha_inicio_estimada">Fecha estimada de inicio</string>
+    <string name="prompt_fecha_fin_estimada">Fecha estimada de finalización</string>
+
+
 </resources>

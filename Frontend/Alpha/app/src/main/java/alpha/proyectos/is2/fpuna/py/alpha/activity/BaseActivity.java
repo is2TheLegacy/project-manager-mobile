@@ -1,15 +1,17 @@
-package alpha.proyectos.is2.fpuna.py.alpha;
+package alpha.proyectos.is2.fpuna.py.alpha.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
+import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.login.LoginService;
 import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
@@ -66,13 +70,32 @@ public abstract class BaseActivity extends AppCompatActivity
         inint();
     }
 
-    protected void loadLayout(int layoutId) {
+    protected void loadLayout(int layoutId, String title) {
+
         View C = findViewById(R.id.content_activity);
         ViewGroup parent = (ViewGroup) C.getParent();
         int index = parent.indexOfChild(C);
         parent.removeView(C);
         C = getLayoutInflater().inflate(layoutId, parent, false);
         parent.addView(C, index);
+        setTitle(title);
+    }
+
+    protected RecyclerView getRecyclerView(int idRecyclerView) {
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(idRecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        DividerItemDecoration divider = new DividerItemDecoration(
+                mRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL
+        );
+        divider.setDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.line_separator));
+        mRecyclerView.addItemDecoration(divider);
+        return mRecyclerView;
     }
 
     @Override
@@ -137,6 +160,10 @@ public abstract class BaseActivity extends AppCompatActivity
             });
 
             preferenceUtils.logout();
+            
+        } else if (id == R.id.nav_tareas) {
+            Intent i = new Intent(BaseActivity.this, ListaTareasActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
