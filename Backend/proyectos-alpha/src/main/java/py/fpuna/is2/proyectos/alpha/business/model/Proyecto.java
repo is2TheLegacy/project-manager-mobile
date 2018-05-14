@@ -241,4 +241,7 @@ public class Proyecto implements Serializable {
         this.tareaCollection = tareaCollection;
     }
     
+    public static void main(String[] args) {
+        System.out.println(UUID.randomUUID().toString());
+    }
 }

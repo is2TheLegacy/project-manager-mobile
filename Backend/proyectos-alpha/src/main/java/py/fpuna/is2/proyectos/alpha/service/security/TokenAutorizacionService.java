@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package py.fpuna.is2.proyectos.alpha.service;
+package py.fpuna.is2.proyectos.alpha.service.security;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.PathParam;
 import py.fpuna.is2.proyectos.alpha.business.model.TokenAutorizacion;
+import py.fpuna.is2.proyectos.alpha.service.AbstractFacade;
 
 /**
  *

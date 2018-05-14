@@ -3,13 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package py.fpuna.is2.proyectos.alpha.service;
+package py.fpuna.is2.proyectos.alpha.service.security;
 
 import java.util.UUID;
 import javax.inject.Inject;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -21,9 +18,6 @@ import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import py.fpuna.is2.proyectos.alpha.service.exceptions.ApplicationException;
-import py.fpuna.is2.proyectos.alpha.service.security.LoginEntity;
-import py.fpuna.is2.proyectos.alpha.service.security.LoginException;
-import py.fpuna.is2.proyectos.alpha.service.security.UserAuthorizator;
 
 /**
  *

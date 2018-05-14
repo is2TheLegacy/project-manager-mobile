@@ -57,7 +57,6 @@ public class Tarea implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Column(name = "id_tarea")
     private UUID idTarea;
     @Basic(optional = false)
