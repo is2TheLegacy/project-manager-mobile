@@ -206,7 +206,7 @@ public class CrearUsuarioActivity extends AppCompatActivity implements Callback<
             } else {
                 cearCuentaButton.setEnabled(true);
                 cearCuentaButton.setText(R.string.action_registrar_usuario);
-                showMessage("Error", "Ocurrio un error al realizar la operacion");
+                showMessage("Error", "Ocurrio un error al realizar la operación");
             }
         }
     }
@@ -266,17 +266,5 @@ public class CrearUsuarioActivity extends AppCompatActivity implements Callback<
         dialog.show();
     }
 
-    class CallBackCredenciales implements Callback<ResponseBody> {
-
-        @Override
-        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-        }
-    }
 }
 

@@ -7,11 +7,11 @@ package alpha.proyectos.is2.fpuna.py.alpha;
 
 public class Constantes {
 
-    //public static final String API_SERVER = "http://raphapy.tk:18080";
-    //public static final String BASE_URL_API = "/proyectos-alpha/api";
+    public static final String API_SERVER = "http://raphapy.tk:18080";
+    public static final String BASE_URL_API = "/proyectos-alpha/api";
 
-    public static final String API_SERVER = "http://192.168.0.116:8080";
-    public static final String BASE_URL_API = "/TestRest/api";
+    //public static final String API_SERVER = "http://192.168.0.119:8080";
+    //public static final String BASE_URL_API = "/TestRest/api";
 
     //shared preferences keys
     public static final String PROYECTOS_ALPHA_PREFS_NAME = "ProyectosAlphaPrefs";

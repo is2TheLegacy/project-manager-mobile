@@ -3,16 +3,9 @@ package alpha.proyectos.is2.fpuna.py.alpha.activity;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -22,7 +15,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -33,10 +25,10 @@ import java.util.List;
 import java.util.UUID;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
+import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
-import alpha.proyectos.is2.fpuna.py.alpha.service.TareaService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
-import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -45,40 +37,36 @@ import retrofit2.Response;
 
 
 /**
- * Pantalla de creacion/edicion de tareas.
+ * Pantalla de creacion/edicion de proyectos.
  * @author federico.torres
  */
-public class CrearTareaActivity extends BaseActivity
+public class CrearProyectoActivity extends BaseActivity
         implements DatePickerDialog.OnDateSetListener, Callback<ResponseBody> {
 
-	private Button cearTareaButton;
-    private TareaService service;
+	private Button cearProyectoButton;
+    private ProyectoService service;
     private UsuarioService usuarioService;
     private UUID uuid;
     private final Activity mContext = this;
 
     private EditText nombreView;
     private EditText descripcionView;
-    private EditText fechaInicioView;
     private EditText fechaFinView;
 
-    private Date fechaInicio;
     private Date fechaFin;
-    private String datePicker;
-    private Usuario usuarioAsignado;
-    private String prioridad;
+    private String categoria;
+    private Usuario propietario;
 
 	@Override
     protected void inint() {
 
-        loadLayout(R.layout.activity_crear_tarea, "Nueva Tarea");
+        loadLayout(R.layout.activity_crear_proyecto, "Nuevo Proyecto");
 
         nombreView = (EditText) findViewById(R.id.nombre);
         descripcionView = (EditText) findViewById(R.id.descripcion);
-        fechaInicioView = (EditText) findViewById(R.id.fechaInicio);
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
 
-        service = (TareaService) ServiceBuilder.create(TareaService.class);
+        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
         usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
 
         usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {
@@ -93,7 +81,7 @@ public class CrearTareaActivity extends BaseActivity
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        usuarioAsignado = usuarios.get(i);
+                        propietario = usuarios.get(i);
                     }
 
                     @Override
@@ -113,35 +101,11 @@ public class CrearTareaActivity extends BaseActivity
             }
         });
 
-        final List<String> prioridadList = new ArrayList<String>();
-        prioridadList.add("NORMAL");
-        prioridadList.add("BAJA");
-        prioridadList.add("MEDIA");
-        prioridadList.add("ALTA");
-        prioridadList.add("MUY ALTA");
-
-        Spinner spinner = (Spinner) findViewById(R.id.prioridad_spinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                prioridad = prioridadList.get(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, prioridadList);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
-
-        cearTareaButton = (Button) findViewById(R.id.button_guardar);
-        cearTareaButton.setOnClickListener(new OnClickListener() {
+        cearProyectoButton = (Button) findViewById(R.id.button_guardar);
+        cearProyectoButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                crearTarea();
+                crearProyecto();
             }
         });
 
@@ -156,7 +120,6 @@ public class CrearTareaActivity extends BaseActivity
 
     public void datePicker(View view) {
         DatePickerFragment fragment = new DatePickerFragment();
-        datePicker = (String) view.getTag();
         fragment.show(getSupportFragmentManager(), "");
     }
 
@@ -164,23 +127,17 @@ public class CrearTareaActivity extends BaseActivity
     public void onDateSet(DatePicker view, int year, int month, int day) {
         Calendar cal = new GregorianCalendar(year, month, day);
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        if (datePicker.equals("inicio")) {
-            fechaInicio = cal.getTime();
-            ((TextView) findViewById(R.id.fechaInicio)).setText(dateFormat.format(cal.getTime()));
-        } else {
-            fechaFin =cal.getTime();
-            ((TextView) findViewById(R.id.fechaFin)).setText(dateFormat.format(cal.getTime()));
-        }
+        fechaFin = cal.getTime();
+        ((TextView) findViewById(R.id.fechaFin)).setText(dateFormat.format(cal.getTime()));
     }
 
-    private void crearTarea() {
+    private void crearProyecto() {
 
         boolean cancel = false;
         View focusView = null;
 
         String nombre = nombreView.getText().toString();
         String descripcion = descripcionView.getText().toString();
-        String inicio = fechaInicioView.getText().toString();
         String fin = fechaFinView.getText().toString();
 
         if (TextUtils.isEmpty(nombre)) {
@@ -191,10 +148,6 @@ public class CrearTareaActivity extends BaseActivity
             descripcionView.setError(getString(R.string.error_field_required));
             focusView = descripcionView;
             cancel = true;
-        } else if (TextUtils.isEmpty(inicio)) {
-            fechaInicioView.setError(getString(R.string.error_field_required));
-            focusView = fechaInicioView;
-            cancel = true;
         } else if (TextUtils.isEmpty(fin)) {
             fechaFinView.setError(getString(R.string.error_field_required));
             focusView = fechaFinView;
@@ -203,13 +156,12 @@ public class CrearTareaActivity extends BaseActivity
 
         if (cancel) {
             focusView.requestFocus();
-            cearTareaButton.setEnabled(true);
-            cearTareaButton.setText(R.string.action_guardar);
+            cearProyectoButton.setEnabled(true);
+            cearProyectoButton.setText(R.string.action_guardar);
         } else {
             uuid = UUID.randomUUID();
-            Tarea tarea = new Tarea(uuid, nombre, descripcion, fechaInicio.getTime(), fechaFin.getTime(),
-                    prioridad, usuarioAsignado);
-            Call<ResponseBody> call = service.crear(tarea);
+            Proyecto proyecto = new Proyecto(uuid, nombre, descripcion, fechaFin.getTime(), propietario);
+            Call<ResponseBody> call = service.crear(proyecto);
             call.enqueue(this);
         }
     }
@@ -217,7 +169,7 @@ public class CrearTareaActivity extends BaseActivity
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
-            showMessageSuccess("Exitoso", "Tarea creada exitosamente");
+            showMessageSuccess("Exitoso", "Proyecto creada exitosamente");
         } else {
             showMessage("Error", "Ocurrio un error al realizar la operación");
         }

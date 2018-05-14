@@ -22,6 +22,9 @@ import static alpha.proyectos.is2.fpuna.py.alpha.Constantes.BASE_URL_API;
 
 public interface UsuarioService {
 
+    @GET(BASE_URL_API + "/usuarios")
+    Call<List<Usuario>> getAll();
+
     @POST(BASE_URL_API + "/usuarios")
     Call<ResponseBody> create(@Body Usuario user);
 
