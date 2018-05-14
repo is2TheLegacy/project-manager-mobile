@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package py.fpuna.is2.proyectos.alpha.service;
+package py.fpuna.is2.proyectos.alpha.service.usuarios;
 
 import java.util.Date;
 import java.util.List;
@@ -25,7 +25,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import py.fpuna.is2.proyectos.alpha.business.model.Usuario;
-import py.fpuna.is2.proyectos.alpha.business.model.constants.EstadosUsuario;
+import py.fpuna.is2.proyectos.alpha.service.AbstractFacade;
 import py.fpuna.is2.proyectos.alpha.service.assertions.ServiceAssertions;
 import py.fpuna.is2.proyectos.alpha.service.exceptions.ApplicationException;
 import py.fpuna.is2.proyectos.alpha.service.security.UserAuthorizator;
