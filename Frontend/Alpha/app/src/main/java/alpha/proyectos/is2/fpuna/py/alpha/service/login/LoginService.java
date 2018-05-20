@@ -21,4 +21,9 @@ public interface LoginService {
 
     @DELETE(Constantes.BASE_URL_API + "/sessions/{token}")
     Call<ResponseBody> logout(@Path("token") String token);
+
+    @FormUrlEncoded
+    @POST(Constantes.BASE_URL_API + "/sessions/{token}/registrationid")
+    Call<ResponseBody> registrationid(@Path("token") String token,
+                                      @Field("gcm-registration-id") String registrationid);
 }

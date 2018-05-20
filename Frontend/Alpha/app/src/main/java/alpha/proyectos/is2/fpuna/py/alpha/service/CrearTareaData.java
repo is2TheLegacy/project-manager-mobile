@@ -137,5 +137,5 @@ public class CrearTareaData {
     public void setProyecto(Proyecto proyecto) {
         this.proyecto = proyecto;
     }
-    
+
 }

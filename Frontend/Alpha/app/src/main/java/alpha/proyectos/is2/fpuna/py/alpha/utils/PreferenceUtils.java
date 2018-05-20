@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import static alpha.proyectos.is2.fpuna.py.alpha.Constantes.SESSION_AUTH_TOKEN;
+
 /**
  *
  * @author federico.torres
@@ -13,6 +15,9 @@ public class PreferenceUtils {
 
     /** Boolean para indicar si el usuario esta logueado o no */
     public static final String IS_LOGGED_IN = "is_logged_in";
+
+    /** Token del Firebase */
+    public static final String TOKEN_FIREBASE = "token_firebase";
 
     private Context mContext;
 
@@ -36,6 +41,20 @@ public class PreferenceUtils {
         SharedPreferences.Editor editor = getEditor();
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.commit();
+    }
+
+    public void guardarTokenFirebase(String token) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString(TOKEN_FIREBASE, token);
+        editor.commit();
+    }
+
+    public String getTokenFirebase() {
+        return getPreferences().getString(TOKEN_FIREBASE, null);
+    }
+
+    public String getAuthToken() {
+        return getPreferences().getString(SESSION_AUTH_TOKEN, null);
     }
 
     public void logout() {

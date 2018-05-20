@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "789216882743",
+    "firebase_url": "https://alpha-2369a.firebaseio.com",
+    "project_id": "alpha-2369a",
+    "storage_bucket": "alpha-2369a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789216882743:android:09c95b8ac148a7bc",
+        "android_client_info": {
+          "package_name": "alpha.proyectos.is2.fpuna.py.alpha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789216882743-4ckvlt52a4ij84v18epuu915t1jk3cu0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvPAavuox0DnJh83L94p_HuUX9a1OfhDg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

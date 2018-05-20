@@ -28,6 +28,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.login.LoginService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.login.RespuestaLogin;
 import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
     private View mProgressView;
     private View mLoginFormView;
 
+    private LoginService service;
     private PreferenceUtils preferenceUtils;
 
     @Override
@@ -52,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
         setContentView(R.layout.activity_login);
 
         preferenceUtils = new PreferenceUtils(LoginActivity.this);
+        service = (LoginService) ServiceBuilder.create(LoginService.class);
 
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -97,7 +100,6 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
             focusView.requestFocus();
         } else {
             showProgress(true);
-            LoginService service = (LoginService) ServiceBuilder.create(LoginService.class);
             Call<RespuestaLogin> call = service.login(userName, password);
             call.enqueue(this);
         }
@@ -106,13 +108,14 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
 
     @Override
     public void onResponse(Call<RespuestaLogin> call, Response<RespuestaLogin> response) {
-        showProgress(false);
+
         if (response.isSuccessful()) {
             RespuestaLogin res = response.body();
             if (res.getStatus() == 200) {
                 SharedPreferences prefs = getSharedPreferences(Constantes.PROYECTOS_ALPHA_PREFS_NAME, 0);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(Constantes.SESSION_AUTH_TOKEN, res.getAuthToken().toString());
+                String authToken = res.getAuthToken().toString();
+                editor.putString(Constantes.SESSION_AUTH_TOKEN, authToken);
                 //editor.putString(Constantes.SESSION_ID_USUARIO, res.getUser().getIdUsuario().toString());
                 editor.putString(Constantes.SESSION_ALIAS, res.getUser().getAlias());
                 editor.putString(Constantes.SESSION_NOMBRE, res.getUser().getNombre());
@@ -120,12 +123,39 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
                 editor.putString(Constantes.SESSION_EMAIL, res.getUser().getEmail());
                 editor.commit();
 
-                Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
-                startActivity(i);
-                preferenceUtils.login();
-                finish();
+                // Registrar token del firebase
+                String tokenFirebase = preferenceUtils.getTokenFirebase();
+                if (tokenFirebase != null) {
+                    Call<ResponseBody> responseRegistrationId = service.registrationid(authToken, tokenFirebase);
+                    responseRegistrationId.enqueue(new Callback() {
+                        @Override
+                        public void onResponse(Call call, Response response) {
+                            showProgress(false);
+                            System.err.println("Response code : " + response.code());
+                            Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+                            startActivity(i);
+                            preferenceUtils.login();
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call call, Throwable t) {
+                            showProgress(false);
+                            Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+                            startActivity(i);
+                            preferenceUtils.login();
+                            finish();
+                        }
+                    });
+                } else {
+                    Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+                    startActivity(i);
+                    preferenceUtils.login();
+                    finish();
+                }
 
             } else {
+                showProgress(false);
                 if (response.body() != null && response.body().getMessages() != null) {
                     String msg = response.body().getMessages().get(0);
                     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
@@ -134,6 +164,7 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
                 }
             }
         } else {
+            showProgress(false);
             Gson gson = new Gson();
             JsonReader jsonReader = gson.newJsonReader(response.errorBody().charStream());
             RespuestaLogin errResp = gson.fromJson(jsonReader, RespuestaLogin.class);

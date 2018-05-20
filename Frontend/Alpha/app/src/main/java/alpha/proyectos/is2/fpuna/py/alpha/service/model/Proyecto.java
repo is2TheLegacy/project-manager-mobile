@@ -12,7 +12,9 @@ public class Proyecto {
 
     private UUID idProyecto;
     private String nombre;
+    private String estado;
     private String descripcion;
+    private Long fechaCreacion;
     private Long fechaFinalizacion;
     private Usuario propietario;
 
@@ -51,6 +53,22 @@ public class Proyecto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public Long getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Long fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
     public Long getFechaFinalizacion() {

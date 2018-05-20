@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -52,7 +53,7 @@ import retrofit2.Response;
  * Pantalla de creacion/edicion de tareas.
  * @author federico.torres
  */
-public class CrearTareaActivity extends BaseActivity
+public class CrearTareaActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener, Callback<ResponseBody> {
 
 	private Button cearTareaButton;
@@ -74,10 +75,13 @@ public class CrearTareaActivity extends BaseActivity
     private Proyecto proyecto;
     private String prioridad;
 
-	@Override
-    protected void inint() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
-        loadLayout(R.layout.activity_crear_tarea, "Nueva Tarea");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_crear_tarea);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         nombreView = (EditText) findViewById(R.id.nombre);
         descripcionView = (EditText) findViewById(R.id.descripcion);
@@ -290,6 +294,31 @@ public class CrearTareaActivity extends BaseActivity
                             getActivity(), year, month, day);
         }
 
+    }
+
+    private void showMessageSuccess(String titulo, String mensaje) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(mensaje).setTitle(titulo);
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showMessage(String titulo, String mensaje) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(mensaje).setTitle(titulo);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

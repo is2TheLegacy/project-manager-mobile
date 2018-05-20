@@ -13,6 +13,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".activity.SplashScreenActivity"
             android:label="@string/title_activity_splash_screen"
@@ -23,32 +38,52 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.DashboardActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity
             android:name=".activity.LoginActivity"
             android:label="Gestor de proyectos Alpha"></activity>
+
         <activity
             android:name=".activity.CrearUsuarioActivity"
             android:label="Crear Usuario"></activity>
+
         <activity
             android:name=".activity.ListaTareasActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.CrearTareaActivity"
+            android:label="@string/title_activity_crear_tarea"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.ListaProyectoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.CrearProyectoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.EditarProyectoActivity"
             android:label="@string/title_activity_editar_proyecto"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.DatosProyectoActivity"
+            android:label="@string/title_activity_datos_proyecto"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.ListaHitosActivity"
+            android:label="@string/title_activity_lista_hitos"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>

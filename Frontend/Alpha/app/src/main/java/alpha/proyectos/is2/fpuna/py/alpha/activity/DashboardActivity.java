@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.adapter.ProyectoAdapter;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +39,10 @@ public class DashboardActivity extends BaseActivity implements Callback<List<Pro
     @Override
     protected void inint() {
         loadLayout(R.layout.activity_dashboard, "Dashboard");
+
+        PreferenceUtils preferenceUtils = new PreferenceUtils(DashboardActivity.this);
+        String tokenFirebase = preferenceUtils.getTokenFirebase();
+        System.err.println("Token firebase : " + tokenFirebase);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
@@ -58,7 +64,7 @@ public class DashboardActivity extends BaseActivity implements Callback<List<Pro
     @Override
     public void onResponse(Call<List<Proyecto>> call, Response<List<Proyecto>> response) {
         if (response.isSuccessful()) {
-            List<Proyecto> proyectos = response.body();
+            final List<Proyecto> proyectos = response.body();
             final ArrayList<String> list = new ArrayList<>();
             for (int i = 0; i < proyectos.size(); ++i) {
                 list.add(proyectos.get(i).getNombre());
@@ -76,7 +82,21 @@ public class DashboardActivity extends BaseActivity implements Callback<List<Pro
             misProyectosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Intent intent = new Intent(DashboardActivity.this, EditarProyectoActivity.class);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    Proyecto datosProyecto = proyectos.get(i);
+                    Intent intent = new Intent(DashboardActivity.this, DatosProyectoActivity.class);
+                    intent.putExtra("EXTRA_ID_PROYECTO", datosProyecto.getIdProyecto().toString());
+                    intent.putExtra("EXTRA_NOMBRE", datosProyecto.getNombre());
+                    intent.putExtra("EXTRA_ESTADO", datosProyecto.getEstado());
+                    intent.putExtra("EXTRA_FECHA_CREACION", sdf.format(datosProyecto.getFechaCreacion()));
+                    intent.putExtra("EXTRA_DESCRIPCION", datosProyecto.getDescripcion());
+                    if (datosProyecto.getFechaFinalizacion() != null) {
+                        intent.putExtra("EXTRA_FECHA_FIN", sdf.format(datosProyecto.getFechaFinalizacion()));
+                    }
+                    intent.putExtra("EXTRA_ID_PROPIETARIO", datosProyecto.getPropietario().getIdUsuario().toString());
+                    String propietario = datosProyecto.getPropietario().getNombre()
+                            + " " + datosProyecto.getPropietario().getApellido();
+                    intent.putExtra("EXTRA_NOMBRE_PROPIETARIO", propietario);
                     startActivity(intent);
                 }
             });

@@ -35,7 +35,7 @@ public class SplashScreenActivity extends Activity {
 
             @Override
             public void run() {
-                Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);// LoginActivity.class);
+                Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 if (preferenceUtils.isLoggedIn()) {
                     i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 }

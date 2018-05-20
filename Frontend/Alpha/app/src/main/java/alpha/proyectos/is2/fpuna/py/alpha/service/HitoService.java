@@ -1,6 +1,6 @@
 package alpha.proyectos.is2.fpuna.py.alpha.service;
 
-import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -12,13 +12,13 @@ import java.util.List;
 
 import static alpha.proyectos.is2.fpuna.py.alpha.Constantes.BASE_URL_API;
 
-public interface TareaService {
+public interface HitoService {
 
-    @GET(BASE_URL_API + "/tareas")
-    Call<List<Tarea>> listar();
+    @GET(BASE_URL_API + "/hitos")
+    Call<List<Hito>> listar();
 
-    @POST(BASE_URL_API + "/tareas")
-    Call<ResponseBody> crear(@Body CrearTareaData tarea);
+    @POST(BASE_URL_API + "hitos")
+    Call<ResponseBody> crear(@Body Hito hito);
 
 }
 
