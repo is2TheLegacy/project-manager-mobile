@@ -11,11 +11,11 @@
 
     <string name="action_cancelar">Cancelar</string>
     <string name="prompt_username">Usuario</string>
-	<string name="prompt_email">Email</string>
+    <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Iniciar session</string>
     <string name="action_sign_in_short">Sign in</string>
-	<string name="permission_rationale">"Contacts permissions are needed for providing email
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
     <string name="action_create_account">Crear una cuenta</string>
@@ -39,6 +39,7 @@
 
     <string name="prompt_fecha_inicio_estimada">Fecha estimada de inicio</string>
     <string name="prompt_fecha_fin_estimada">Fecha estimada de finalización</string>
+    <string name="title_activity_editar_proyecto">Editar Proyecto</string>
 
 
 </resources>

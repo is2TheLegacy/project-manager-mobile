@@ -18,7 +18,7 @@ public interface TareaService {
     Call<List<Tarea>> listar();
 
     @POST(BASE_URL_API + "/tareas")
-    Call<ResponseBody> crear(@Body Tarea user);
+    Call<ResponseBody> crear(@Body CrearTareaData user);
 
 }
 

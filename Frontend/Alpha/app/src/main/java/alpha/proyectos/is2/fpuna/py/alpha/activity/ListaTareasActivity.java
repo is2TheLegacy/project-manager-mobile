@@ -58,6 +58,7 @@ public class ListaTareasActivity extends BaseActivity implements Callback<List<T
             mAdapter = new TareasAdapter(ofertas);
             mRecyclerView.setAdapter(mAdapter);
         } else {
+            System.err.println("Status code : " + response.message());
             Toast.makeText(this, "Ocurrio un error al procesar la respuesta del Servidor", Toast.LENGTH_SHORT).show();
         }
         showProgress(false);

@@ -1,36 +1,45 @@
-package alpha.proyectos.is2.fpuna.py.alpha.service.model;
+package alpha.proyectos.is2.fpuna.py.alpha.service;
 
 import java.util.Date;
 import java.util.UUID;
 
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
 
-public class Tarea {
+public class CrearTareaData {
 
     private UUID idTarea;
-	private String nombre;
-	private String descripcion;
-	private String prioridad;
-	private String estado;
+    private String nombre;
+    private String descripcion;
+    private String prioridad;
+    private String estado;
     private Date fechaInicio;
     private Date fechaFin;
-	private Date fechaEstimadaInicio;
-	private Date fechaEstimadaFin;
+    private Long fechaEstimadaInicio;
+    private Long fechaEstimadaFin;
     private short porcentajeRealizado;
     private Usuario usuarioAsignado;
-	
-	public Tarea() {
-	}
+    private Usuario usuarioCreador;
+    private Proyecto proyecto;
 
-    public Tarea(UUID id, String nombre, String descripcion, Date fechaEstimadaInicio,
-                 Date fechaEstimadaFin, String prioridad, Usuario usuarioAsignado) {
+    public CrearTareaData() {
+    }
+
+    public CrearTareaData(UUID id, String nombre, String descripcion, Date fechaEstimadaInicio,
+                          Date fechaEstimadaFin, String prioridad, Usuario usuarioAsignado,
+                          Proyecto proyecto) {
+
         this.idTarea = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        //this.fechaEstimadaInicio = fechaEstimadaInicio;
-        //this.fechaEstimadaFin = fechaEstimadaFin;
+        this.fechaEstimadaInicio = fechaEstimadaInicio.getTime();
+        this.fechaEstimadaFin = fechaEstimadaFin.getTime();
         this.prioridad = prioridad;
         this.usuarioAsignado = usuarioAsignado;
+        this.usuarioCreador = usuarioAsignado;
+        this.estado = "PENDIENTE";
+        this.proyecto = proyecto;
+        this.porcentajeRealizado = 0;
     }
 
     public UUID getIdTarea() {
@@ -105,19 +114,28 @@ public class Tarea {
         this.fechaFin = fechaFin;
     }
 
-    public Date getFechaEstimadaInicio() {
+    public Long getFechaEstimadaInicio() {
         return fechaEstimadaInicio;
     }
 
-    public void setFechaEstimadaInicio(Date fechaEstimadaInicio) {
+    public void setFechaEstimadaInicio(Long fechaEstimadaInicio) {
         this.fechaEstimadaInicio = fechaEstimadaInicio;
     }
 
-    public Date getFechaEstimadaFin() {
+    public Long getFechaEstimadaFin() {
         return fechaEstimadaFin;
     }
 
-    public void setFechaEstimadaFin(Date fechaEstimadaFin) {
+    public void setFechaEstimadaFin(Long fechaEstimadaFin) {
         this.fechaEstimadaFin = fechaEstimadaFin;
     }
+
+    public Proyecto getProyecto() {
+        return proyecto;
+    }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+    }
+    
 }

@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,9 +34,12 @@ import java.util.List;
 import java.util.UUID;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
+import alpha.proyectos.is2.fpuna.py.alpha.service.CrearTareaData;
+import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.TareaService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
 import okhttp3.ResponseBody;
@@ -54,6 +58,7 @@ public class CrearTareaActivity extends BaseActivity
 	private Button cearTareaButton;
     private TareaService service;
     private UsuarioService usuarioService;
+    private ProyectoService proyectoService;
     private UUID uuid;
     private final Activity mContext = this;
 
@@ -66,6 +71,7 @@ public class CrearTareaActivity extends BaseActivity
     private Date fechaFin;
     private String datePicker;
     private Usuario usuarioAsignado;
+    private Proyecto proyecto;
     private String prioridad;
 
 	@Override
@@ -80,6 +86,7 @@ public class CrearTareaActivity extends BaseActivity
 
         service = (TareaService) ServiceBuilder.create(TareaService.class);
         usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
+        proyectoService = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
 
         usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {
             @Override
@@ -109,6 +116,38 @@ public class CrearTareaActivity extends BaseActivity
 
             @Override
             public void onFailure(Call<List<Usuario>> call, Throwable t) {
+                ;
+            }
+        });
+
+        proyectoService.listar().enqueue(new Callback<List<Proyecto>>() {
+            @Override
+            public void onResponse(Call<List<Proyecto>> call, Response<List<Proyecto>> response) {
+                List<String> nombreProyectos = new ArrayList<String>();
+                final List<Proyecto> proyectos = response.body();
+                for (Proyecto proyecto : proyectos) {
+                    nombreProyectos.add(proyecto.getNombre());
+                }
+                Spinner spinner = (Spinner) findViewById(R.id.proyectos_spinner);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        proyecto = proyectos.get(i);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                    }
+                });
+
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mContext,
+                        android.R.layout.simple_spinner_item, nombreProyectos);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(dataAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Proyecto>> call, Throwable t) {
                 ;
             }
         });
@@ -207,8 +246,8 @@ public class CrearTareaActivity extends BaseActivity
             cearTareaButton.setText(R.string.action_guardar);
         } else {
             uuid = UUID.randomUUID();
-            Tarea tarea = new Tarea(uuid, nombre, descripcion, fechaInicio.getTime(), fechaFin.getTime(),
-                    prioridad, usuarioAsignado);
+            CrearTareaData tarea = new CrearTareaData(uuid, nombre, descripcion,
+                    fechaInicio, fechaFin, prioridad, usuarioAsignado, proyecto);
             Call<ResponseBody> call = service.crear(tarea);
             call.enqueue(this);
         }
@@ -216,9 +255,18 @@ public class CrearTareaActivity extends BaseActivity
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        System.err.println("");
         if (response.isSuccessful()) {
             showMessageSuccess("Exitoso", "Tarea creada exitosamente");
         } else {
+            System.err.println("Status code : " + response.code());
+            System.err.println("Status code : " + response.message());
+            System.err.println("Status code : " + response.body());
+            try {
+                System.err.println("Status code : " + response.errorBody().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             showMessage("Error", "Ocurrio un error al realizar la operación");
         }
     }

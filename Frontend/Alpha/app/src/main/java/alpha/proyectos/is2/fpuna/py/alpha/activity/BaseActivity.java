@@ -166,6 +166,9 @@ public abstract class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_tareas) {
             Intent i = new Intent(BaseActivity.this, ListaTareasActivity.class);
             startActivity(i);
+        } else if (id == R.id.nav_proyectos) {
+            Intent i = new Intent(BaseActivity.this, ListaProyectoActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
