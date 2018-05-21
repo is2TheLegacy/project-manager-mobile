@@ -5,6 +5,7 @@
  */
 package py.fpuna.is2.proyectos.alpha.business.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -13,6 +14,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -83,14 +85,18 @@ public class Proyecto implements Serializable {
     @JoinColumn(name = "categoria", referencedColumnName = "id_categoria_proyecto")
     @ManyToOne
     private CategoriaProyecto categoria;
+    @JsonIgnore
     @JoinColumn(name = "propietario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario propietario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto")
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto", fetch = FetchType.EAGER)
     private Collection<Hito> hitoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto")
+    @JsonIgnore
     private Collection<SolicitudColaboracion> solicitudColaboracionCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto1")
+    @JsonIgnore
     private Collection<MiembroProyecto> miembroProyectoCollection;
 
     public Proyecto() {

@@ -5,6 +5,7 @@
  */
 package py.fpuna.is2.proyectos.alpha.business.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -43,6 +44,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Hito.findByFechaRealFin", query = "SELECT h FROM Hito h WHERE h.fechaRealFin = :fechaRealFin")})
 public class Hito implements Serializable {
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hito")
     private Collection<Tarea> tareaCollection;
 
@@ -73,9 +75,11 @@ public class Hito implements Serializable {
     @Column(name = "fecha_real_fin")
     @Temporal(TemporalType.DATE)
     private Date fechaRealFin;
+    @JsonIgnore
     @JoinColumn(name = "proyecto", referencedColumnName = "id_proyecto")
     @ManyToOne(optional = false)
     private Proyecto proyecto;
+    @JsonIgnore
     @JoinColumn(name = "usuario_creador", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario usuarioCreador;

@@ -7,7 +7,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import py.fpuna.is2.proyectos.alpha.service.exceptions.BusinessException;
+import py.fpuna.is2.proyectos.alpha.business.services.exceptions.BusinessException;
 
 public class BeanValidator {
 
