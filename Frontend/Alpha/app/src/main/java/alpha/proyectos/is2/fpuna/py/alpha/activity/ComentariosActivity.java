@@ -17,19 +17,19 @@ import java.util.List;
 import java.util.ArrayList;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
-import alpha.proyectos.is2.fpuna.py.alpha.adapter.HitosAdapter;
+import alpha.proyectos.is2.fpuna.py.alpha.adapter.ComentariosAdapter;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
-import alpha.proyectos.is2.fpuna.py.alpha.service.HitoService;
-import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
+import alpha.proyectos.is2.fpuna.py.alpha.service.TareaService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Comentario;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Pantalla de listado de Hitos
+ * Pantalla de listado de Comentarios
  * @author federico.torres
  */
-public class ListaHitosActivity extends AppCompatActivity implements Callback<List<Hito>> {
+public class ComentariosActivity extends AppCompatActivity implements Callback<List<Comentario>> {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -38,33 +38,37 @@ public class ListaHitosActivity extends AppCompatActivity implements Callback<Li
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_hitos);
+        setContentView(R.layout.activity_comentarios);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         progressBar = (ProgressBar) findViewById(R.id.progressbar_login);
         mRecyclerView = getRecyclerView(R.id.my_recycler_view);
 
-        Button nuevoHitoBtn = (Button) findViewById(R.id.nuevo_hito);
-        nuevoHitoBtn.setOnClickListener(new View.OnClickListener() {
+        final String idTarea = getIntent().getStringExtra("EXTRA_ID_TAREA");
+
+        Button agregarBtn = (Button) findViewById(R.id.agregar);
+        agregarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ListaHitosActivity.this, CrearHitoActivity.class);
+                Intent i = new Intent(ComentariosActivity.this, CrearComentarioActivity.class);
+                i.putExtra("EXTRA_ID_TAREA", idTarea);
                 startActivity(i);
             }
         });
 
-        HitoService service = (HitoService) ServiceBuilder.create(HitoService.class);
-        Call<List<Hito>> call = service.listar();
+        TareaService service = (TareaService) ServiceBuilder.create(TareaService.class);
+        Call<List<Comentario>> call = service.getComentarios(idTarea);
         call.enqueue(this);
+
     }
 
     @Override
-    public void onResponse(Call<List<Hito>> call, Response<List<Hito>> response) {
+    public void onResponse(Call<List<Comentario>> call, Response<List<Comentario>> response) {
         System.err.println("Status code : " + response.code());
         if (response.isSuccessful()) {
-            List<Hito> hitos = response.body();
-            mAdapter = new HitosAdapter(hitos);
+            List<Comentario> comentarios = response.body();
+            mAdapter = new ComentariosAdapter(comentarios);
             mRecyclerView.setAdapter(mAdapter);
         } else {
             System.err.println("Status code : " + response.message());
@@ -74,7 +78,7 @@ public class ListaHitosActivity extends AppCompatActivity implements Callback<Li
     }
 
     @Override
-    public void onFailure(Call<List<Hito>> call, Throwable t) {
+    public void onFailure(Call<List<Comentario>> call, Throwable t) {
         showProgress(false);
         Toast.makeText(this, "Ocurrio un error al invocar al servicio : " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
@@ -83,8 +87,8 @@ public class ListaHitosActivity extends AppCompatActivity implements Callback<Li
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         mRecyclerView.setVisibility(show? View.GONE: View.VISIBLE);
     }
-
-    private RecyclerView getRecyclerView(int idRecyclerView) {
+	
+	private RecyclerView getRecyclerView(int idRecyclerView) {
         RecyclerView mRecyclerView = (RecyclerView) findViewById(idRecyclerView);
         mRecyclerView.setHasFixedSize(true);
 

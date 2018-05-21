@@ -20,8 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
@@ -32,7 +31,6 @@
         android:paddingTop="64dp"
         tools:context="alpha.proyectos.is2.fpuna.py.alpha.activity.CrearTareaActivity">
 
-        <!-- Login progress -->
         <ProgressBar
             android:id="@+id/login_progress"
             style="?android:attr/progressBarStyleLarge"
@@ -89,31 +87,38 @@
                 android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/nombre"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prompt_nombre"
-                        android:maxLines="1" />
+                        android:text="@string/prompt_nombre"/>
+
+                    <TextView
+                        android:id="@+id/nombre"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/descripcion"
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:padding="4dp"
-                        android:hint="@string/prompt_descripcion"
-                        android:inputType="text|textMultiLine"
-                        android:background="@drawable/edit_text_background"
-                        android:gravity="top" />
+                        android:layout_height="wrap_content"
+                        android:text="@string/prompt_descripcion"/>
+
+                    <TextView
+                        android:id="@+id/descripcion"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -126,11 +131,11 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Propietario" />
+                        android:text="Estado" />
 
                     <Spinner
-                        android:id="@+id/usuarios_spinner"
-                        android:layout_width="fill_parent"
+                        android:id="@+id/estado_spinner"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
@@ -138,7 +143,40 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_below="@+id/picDate"
+                        android:layout_width="0dip"
+                        android:layout_weight="90"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/fechaInicio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/prompt_fecha_inicio"
+                            android:maxLines="1" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/picDate"
+                        android:layout_width="0dip"
+                        android:layout_weight="10"
+                        android:layout_marginTop="4dp"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_date"
+                        android:tag="inicio"
+                        android:onClick="datePicker"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <android.support.design.widget.TextInputLayout
@@ -150,7 +188,7 @@
                             android:id="@+id/fechaFin"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_fecha_fin_estimada"
+                            android:hint="@string/prompt_fecha_fin"
                             android:maxLines="1" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -169,20 +207,44 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Categoria" />
+                        android:text="Porcentaje Realizado" />
 
                     <Spinner
-                        android:id="@+id/categoria_spinner"
-                        android:layout_width="fill_parent"
+                        android:id="@+id/porcentaje_spinner"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ver_comentarios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/titulo"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:text="Ver comentarios " />
+
+                <ImageView
+                    android:id="@+id/link_comentarios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_forward_blue"
+                    android:tag="fin" />
+
+            </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

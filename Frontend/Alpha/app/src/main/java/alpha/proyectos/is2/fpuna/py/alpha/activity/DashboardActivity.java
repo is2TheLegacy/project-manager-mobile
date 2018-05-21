@@ -63,7 +63,9 @@ public class DashboardActivity extends BaseActivity implements Callback<List<Pro
 
     @Override
     public void onResponse(Call<List<Proyecto>> call, Response<List<Proyecto>> response) {
+
         if (response.isSuccessful()) {
+
             final List<Proyecto> proyectos = response.body();
             final ArrayList<String> list = new ArrayList<>();
             for (int i = 0; i < proyectos.size(); ++i) {
@@ -93,10 +95,13 @@ public class DashboardActivity extends BaseActivity implements Callback<List<Pro
                     if (datosProyecto.getFechaFinalizacion() != null) {
                         intent.putExtra("EXTRA_FECHA_FIN", sdf.format(datosProyecto.getFechaFinalizacion()));
                     }
-                    intent.putExtra("EXTRA_ID_PROPIETARIO", datosProyecto.getPropietario().getIdUsuario().toString());
-                    String propietario = datosProyecto.getPropietario().getNombre()
-                            + " " + datosProyecto.getPropietario().getApellido();
-                    intent.putExtra("EXTRA_NOMBRE_PROPIETARIO", propietario);
+                    if (datosProyecto.getPropietario() != null) {
+                        intent.putExtra("EXTRA_ID_PROPIETARIO", datosProyecto.getPropietario().getIdUsuario().toString());
+                        String propietario = datosProyecto.getPropietario().getNombre()
+                                + " " + datosProyecto.getPropietario().getApellido();
+                        intent.putExtra("EXTRA_NOMBRE_PROPIETARIO", propietario);
+                    }
+
                     startActivity(intent);
                 }
             });

@@ -1,5 +1,6 @@
 package alpha.proyectos.is2.fpuna.py.alpha.service;
 
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Comentario;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -7,6 +8,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 import java.util.List;
 
@@ -19,6 +21,12 @@ public interface TareaService {
 
     @POST(BASE_URL_API + "/tareas")
     Call<ResponseBody> crear(@Body CrearTareaData tarea);
+
+    @GET(BASE_URL_API + "/tareas/{idTarea}/comentarios")
+    Call<List<Comentario>> getComentarios(@Path("idTarea") String idTarea);
+
+    @POST(BASE_URL_API + "/tareas/{idTarea}/comentarios")
+    Call<ResponseBody> crearComentario(@Path("idTarea") String idTarea, @Body Comentario comentario);
 
 }
 

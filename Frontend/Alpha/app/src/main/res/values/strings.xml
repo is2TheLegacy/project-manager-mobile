@@ -34,8 +34,6 @@
     <string name="action_guardar">Guardar</string>
 
     <string name="prompt_descripcion">Descripción</string>
-    <string name="prompt_fecha_inicio">Inicio</string>
-    <string name="prompt_fecha_fin">Finalización</string>
     <string name="prompt_fecha_creacion">Fecha de Creación</string>
     <string name="prompt_estado">Estado</string>
     <string name="prompt_propietario">Propietario</string>
@@ -43,10 +41,18 @@
     <string name="prompt_fecha_inicio_estimada">Fecha estimada de inicio</string>
     <string name="prompt_fecha_fin_estimada">Fecha estimada de finalización</string>
     <string name="title_activity_editar_proyecto">Editar Proyecto</string>
+    <string name="title_activity_editar_tarea">Editar Tarea</string>
+    <string name="prompt_fecha_inicio">Fecha de inicio</string>
+    <string name="prompt_fecha_fin">Fecha de finalización</string>
     <string name="title_activity_datos_proyecto">Datos del Proyecto</string>
     <string name="title_activity_crear_tarea">Nueva Tarea</string>
+    <string name="title_activity_crear_proyecto">Nuevo Proyecto</string>
 
-    <string name="ver_hitos">Hitos</string>
-    <string name="title_activity_lista_hitos">Hitos</string>
+    <string name="ver_hitos">Hitos del Proyecto</string>
+    <string name="title_activity_lista_hitos">Hitos del Proyecto</string>
+    <string name="title_activity_crear_hito">Nuevo Hito</string>
+    <string name="title_activity_comentarios">Comentarios</string>
+    <string name="title_activity_nuevo_comentario">Nuevo Comentario</string>
+    <string name="prompt_agregar_Comentario">Agregar Comentario</string>
 
 </resources>

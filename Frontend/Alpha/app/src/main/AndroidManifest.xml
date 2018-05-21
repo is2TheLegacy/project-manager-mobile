@@ -67,11 +67,17 @@
 
         <activity
             android:name=".activity.CrearProyectoActivity"
+            android:label="@string/title_activity_crear_proyecto"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".activity.EditarProyectoActivity"
             android:label="@string/title_activity_editar_proyecto"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.EditarTareaActivity"
+            android:label="@string/title_activity_editar_tarea"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
@@ -82,6 +88,21 @@
         <activity
             android:name=".activity.ListaHitosActivity"
             android:label="@string/title_activity_lista_hitos"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.CrearHitoActivity"
+            android:label="@string/title_activity_crear_hito"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.ComentariosActivity"
+            android:label="@string/title_activity_comentarios"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.CrearComentarioActivity"
+            android:label="@string/title_activity_nuevo_comentario"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
     </application>

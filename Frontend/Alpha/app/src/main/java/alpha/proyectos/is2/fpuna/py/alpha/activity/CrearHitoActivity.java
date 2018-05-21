@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.UUID;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
+import alpha.proyectos.is2.fpuna.py.alpha.service.HitoService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
@@ -41,14 +43,14 @@ import retrofit2.Response;
 
 
 /**
- * Pantalla de creacion/edicion de proyectos.
+ * Pantalla de creacion de hitos.
  * @author federico.torres
  */
-public class CrearProyectoActivity extends AppCompatActivity
+public class CrearHitoActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener, Callback<ResponseBody> {
 
-	private Button cearProyectoButton;
-    private ProyectoService service;
+	private Button cearHitoButton;
+    private HitoService service;
     private UsuarioService usuarioService;
     private UUID uuid;
     private final Activity mContext = this;
@@ -57,14 +59,14 @@ public class CrearProyectoActivity extends AppCompatActivity
     private EditText descripcionView;
     private EditText fechaFinView;
 
+    private Date fechaInicio;
     private Date fechaFin;
-    private String categoria;
-    private Usuario propietario;
+    private String datePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_crear_proyecto);
+        setContentView(R.layout.activity_crear_hito);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -72,46 +74,14 @@ public class CrearProyectoActivity extends AppCompatActivity
         descripcionView = (EditText) findViewById(R.id.descripcion);
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
 
-        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        service = (HitoService) ServiceBuilder.create(HitoService.class);
         usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
 
-        usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {
-            @Override
-            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
-                List<String> nombreUsuarios = new ArrayList<String>();
-                final List<Usuario> usuarios = response.body();
-                for (Usuario usuario : usuarios) {
-                    nombreUsuarios.add(usuario.getNombre());
-                }
-                Spinner spinner = (Spinner) findViewById(R.id.usuarios_spinner);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        propietario = usuarios.get(i);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-                    }
-                });
-
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mContext,
-                        android.R.layout.simple_spinner_item, nombreUsuarios);
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(dataAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<List<Usuario>> call, Throwable t) {
-                ;
-            }
-        });
-
-        cearProyectoButton = (Button) findViewById(R.id.button_guardar);
-        cearProyectoButton.setOnClickListener(new OnClickListener() {
+        cearHitoButton = (Button) findViewById(R.id.button_guardar);
+        cearHitoButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                crearProyecto();
+                cearHito();
             }
         });
 
@@ -126,6 +96,7 @@ public class CrearProyectoActivity extends AppCompatActivity
 
     public void datePicker(View view) {
         DatePickerFragment fragment = new DatePickerFragment();
+        datePicker = (String) view.getTag();
         fragment.show(getSupportFragmentManager(), "");
     }
 
@@ -133,11 +104,16 @@ public class CrearProyectoActivity extends AppCompatActivity
     public void onDateSet(DatePicker view, int year, int month, int day) {
         Calendar cal = new GregorianCalendar(year, month, day);
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        fechaFin = cal.getTime();
-        ((TextView) findViewById(R.id.fechaFin)).setText(dateFormat.format(cal.getTime()));
+        if (datePicker.equals("inicio")) {
+            fechaInicio = cal.getTime();
+            ((TextView) findViewById(R.id.fechaInicio)).setText(dateFormat.format(cal.getTime()));
+        } else {
+            fechaFin =cal.getTime();
+            ((TextView) findViewById(R.id.fechaFin)).setText(dateFormat.format(cal.getTime()));
+        }
     }
 
-    private void crearProyecto() {
+    private void cearHito() {
 
         boolean cancel = false;
         View focusView = null;
@@ -162,20 +138,20 @@ public class CrearProyectoActivity extends AppCompatActivity
 
         if (cancel) {
             focusView.requestFocus();
-            cearProyectoButton.setEnabled(true);
-            cearProyectoButton.setText(R.string.action_guardar);
+            cearHitoButton.setEnabled(true);
+            cearHitoButton.setText(R.string.action_guardar);
         } else {
             uuid = UUID.randomUUID();
-            Proyecto proyecto = new Proyecto(uuid, nombre, descripcion, fechaFin.getTime(), propietario);
-            Call<ResponseBody> call = service.crear(proyecto);
-            call.enqueue(this);
+            /*Hito hito = new Hito(uuid, nombre, descripcion, fechaFin.getTime(), propietario);
+            Call<ResponseBody> call = service.crear(hito);
+            call.enqueue(this);*/
         }
     }
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
-            showMessageSuccess("Exitoso", "Proyecto creada exitosamente");
+            showMessageSuccess("Exitoso", "Hito creado exitosamente");
         } else {
             showMessage("Error", "Ocurrio un error al realizar la operación");
         }

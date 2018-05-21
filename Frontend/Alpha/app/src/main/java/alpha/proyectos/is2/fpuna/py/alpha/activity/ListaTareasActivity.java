@@ -55,7 +55,7 @@ public class ListaTareasActivity extends BaseActivity implements Callback<List<T
         System.err.println("Status code : " + response.code());
         if (response.isSuccessful()) {
             List<Tarea> tareas = response.body();
-            mAdapter = new TareasAdapter(tareas);
+            mAdapter = new TareasAdapter(tareas, this);
             mRecyclerView.setAdapter(mAdapter);
         } else {
             System.err.println("Status code : " + response.message());
