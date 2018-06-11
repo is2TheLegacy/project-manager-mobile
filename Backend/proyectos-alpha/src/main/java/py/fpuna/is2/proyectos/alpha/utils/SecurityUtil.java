@@ -55,9 +55,4 @@ public final class SecurityUtil {
     public static boolean isStrongPassword(String password) {
         return password != null && password.length() >= 8;
     }
-
-    public static void main(String[] args) throws SecurityException {
-        String password = "1Se@cret";
-        System.out.println(isStrongPassword(password));
-    }
 }
