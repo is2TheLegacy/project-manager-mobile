@@ -7,7 +7,7 @@ package alpha.proyectos.is2.fpuna.py.alpha;
 
 public class Constantes {
 
-    public static final String API_SERVER = "http://raphapy.tk:18080";
+    public static final String API_SERVER = "http://raphapy.ml:18080";
     public static final String BASE_URL_API = "/proyectos-alpha/api";
 
     //public static final String API_SERVER = "http://192.168.0.12:8080";
@@ -21,4 +21,6 @@ public class Constantes {
     public static final String SESSION_NOMBRE = "session.user.nombre";
     public static final String SESSION_APELLIDO = "session.user.apellido";
     public static final String SESSION_EMAIL = "session.user.email";
+
+    public static final String FORMATO_FECHA = "dd/MM/yyyy";
 }

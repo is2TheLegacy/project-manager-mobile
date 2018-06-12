@@ -5,7 +5,7 @@ import java.util.UUID;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
 
 /**
- * Created by konecta on 13/05/18.
+ * @author federico.torres
  */
 
 public class Proyecto {
@@ -17,18 +17,24 @@ public class Proyecto {
     private Long fechaCreacion;
     private Long fechaFinalizacion;
     private Usuario propietario;
+    private CategoriaProyecto categoria;
 
     public Proyecto() {
     }
 
+    public Proyecto(UUID idProyecto) {
+        this.idProyecto = idProyecto;
+    }
+
     public Proyecto(UUID idProyecto, String nombre, String descripcion,
-                    Long fechaFinalizacion, Usuario usuario) {
+                    Long fechaFinalizacion, Usuario usuario, CategoriaProyecto categoria) {
 
         this.idProyecto = idProyecto;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fechaFinalizacion = fechaFinalizacion;
         this.propietario = usuario;
+        this.categoria = categoria;
     }
 
     public UUID getIdProyecto() {
@@ -87,4 +93,11 @@ public class Proyecto {
         this.propietario = propietario;
     }
 
+    public CategoriaProyecto getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaProyecto categoria) {
+        this.categoria = categoria;
+    }
 }

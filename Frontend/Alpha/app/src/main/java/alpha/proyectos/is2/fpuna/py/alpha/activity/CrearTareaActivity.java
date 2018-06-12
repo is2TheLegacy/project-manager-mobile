@@ -48,6 +48,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
+
 
 /**
  * Pantalla de creacion/edicion de tareas.
@@ -263,14 +265,9 @@ public class CrearTareaActivity extends AppCompatActivity
         if (response.isSuccessful()) {
             showMessageSuccess("Exitoso", "Tarea creada exitosamente");
         } else {
-            System.err.println("Status code : " + response.code());
-            System.err.println("Status code : " + response.message());
-            System.err.println("Status code : " + response.body());
-            try {
-                System.err.println("Status code : " + response.errorBody().string());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ResponseBody body = response.errorBody();
+            String json = slurp(body.byteStream(), 1024);
+            System.err.println("Error crear tarea : " + json);
             showMessage("Error", "Ocurrio un error al realizar la operación");
         }
     }

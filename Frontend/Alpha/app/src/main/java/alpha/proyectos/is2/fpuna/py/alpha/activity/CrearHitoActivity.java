@@ -36,10 +36,13 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
 
 
 /**
@@ -54,6 +57,8 @@ public class CrearHitoActivity extends AppCompatActivity
     private UsuarioService usuarioService;
     private UUID uuid;
     private final Activity mContext = this;
+    private String idProyecto;
+    private PreferenceUtils preferenceUtils;
 
     private EditText nombreView;
     private EditText descripcionView;
@@ -69,6 +74,9 @@ public class CrearHitoActivity extends AppCompatActivity
         setContentView(R.layout.activity_crear_hito);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
+        preferenceUtils = new PreferenceUtils(CrearHitoActivity.this);
 
         nombreView = (EditText) findViewById(R.id.nombre);
         descripcionView = (EditText) findViewById(R.id.descripcion);
@@ -108,7 +116,7 @@ public class CrearHitoActivity extends AppCompatActivity
             fechaInicio = cal.getTime();
             ((TextView) findViewById(R.id.fechaInicio)).setText(dateFormat.format(cal.getTime()));
         } else {
-            fechaFin =cal.getTime();
+            fechaFin = cal.getTime();
             ((TextView) findViewById(R.id.fechaFin)).setText(dateFormat.format(cal.getTime()));
         }
     }
@@ -142,9 +150,12 @@ public class CrearHitoActivity extends AppCompatActivity
             cearHitoButton.setText(R.string.action_guardar);
         } else {
             uuid = UUID.randomUUID();
-            /*Hito hito = new Hito(uuid, nombre, descripcion, fechaFin.getTime(), propietario);
+            UUID uuidProyecto = UUID.fromString(idProyecto);
+            Proyecto proyecto = new Proyecto(uuidProyecto);
+            Usuario usuarioCreador = preferenceUtils.getUsuarioLogueado();
+            Hito hito = new Hito(uuid, nombre, descripcion, fechaInicio.getTime(), fechaFin.getTime(), usuarioCreador, proyecto);
             Call<ResponseBody> call = service.crear(hito);
-            call.enqueue(this);*/
+            call.enqueue(this);
         }
     }
 
@@ -153,6 +164,9 @@ public class CrearHitoActivity extends AppCompatActivity
         if (response.isSuccessful()) {
             showMessageSuccess("Exitoso", "Hito creado exitosamente");
         } else {
+            ResponseBody body = response.errorBody();
+            String json = slurp(body.byteStream(), 1024);
+            System.err.println("Error crear hito : " + json);
             showMessage("Error", "Ocurrio un error al realizar la operación");
         }
     }

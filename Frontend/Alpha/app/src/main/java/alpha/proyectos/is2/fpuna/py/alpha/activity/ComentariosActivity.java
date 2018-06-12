@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class ComentariosActivity extends AppCompatActivity implements Callback<L
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ProgressBar progressBar;
+    private LinearLayout sinDatos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class ComentariosActivity extends AppCompatActivity implements Callback<L
 
         progressBar = (ProgressBar) findViewById(R.id.progressbar_login);
         mRecyclerView = getRecyclerView(R.id.my_recycler_view);
+        sinDatos = (LinearLayout) findViewById(R.id.sin_datos_content);
 
         final String idTarea = getIntent().getStringExtra("EXTRA_ID_TAREA");
 
@@ -68,8 +71,13 @@ public class ComentariosActivity extends AppCompatActivity implements Callback<L
         System.err.println("Status code : " + response.code());
         if (response.isSuccessful()) {
             List<Comentario> comentarios = response.body();
-            mAdapter = new ComentariosAdapter(comentarios);
-            mRecyclerView.setAdapter(mAdapter);
+            if (comentarios.size() == 0) {
+                sinDatos.setVisibility(View.VISIBLE);
+            } else {
+                mAdapter = new ComentariosAdapter(comentarios);
+                mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
         } else {
             System.err.println("Status code : " + response.message());
             Toast.makeText(this, "Ocurrio un error al procesar la respuesta del Servidor", Toast.LENGTH_SHORT).show();

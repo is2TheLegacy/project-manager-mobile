@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
 import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.adapter.ProyectoAdapter;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
@@ -29,12 +31,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- *
+ * Pantalla Principal de la app
  * @author federico.torres
  */
-public class DashboardActivity extends BaseActivity implements Callback<List<Proyecto>> {
+public class DashboardActivity extends BaseActivity {
 
-    private CardView cardView;
+    private CardView misProyectosCardView;
+    private CardView proyectosParticipandoCardView;
+    private LinearLayout sinProyectosContent1;
+    private LinearLayout sinProyectosContent2;
+    private TextView sinProyectosText1;
+    private TextView sinProyectosText2;
 
     @Override
     protected void inint() {
@@ -54,68 +61,145 @@ public class DashboardActivity extends BaseActivity implements Callback<List<Pro
             }
         });
 
-        cardView = (CardView) findViewById(R.id.mis_proyectos_card);
-
+        misProyectosCardView = (CardView) findViewById(R.id.mis_proyectos_card);
+        proyectosParticipandoCardView = (CardView) findViewById(R.id.proyectos_participando_card);
+        sinProyectosContent1 = (LinearLayout) findViewById(R.id.sin_proyectos_content_2);
+        sinProyectosContent2 = (LinearLayout) findViewById(R.id.sin_proyectos_content_2);
+        sinProyectosText1 = (TextView) findViewById(R.id.sin_proyectos_text_1);
+        sinProyectosText2 = (TextView) findViewById(R.id.sin_proyectos_text_2);
         ProyectoService service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
-        Call<List<Proyecto>> call = service.listar();
-        call.enqueue(this);
-    }
 
-    @Override
-    public void onResponse(Call<List<Proyecto>> call, Response<List<Proyecto>> response) {
+        Call<List<Proyecto>> call1 = service.listar();
+        call1.enqueue(new Callback<List<Proyecto>>() {
+            @Override
+            public void onResponse(Call<List<Proyecto>> call, Response<List<Proyecto>> response) {
+                if (response.isSuccessful()) {
 
-        if (response.isSuccessful()) {
+                    final List<Proyecto> proyectos = response.body();
 
-            final List<Proyecto> proyectos = response.body();
-            final ArrayList<String> list = new ArrayList<>();
-            for (int i = 0; i < proyectos.size(); ++i) {
-                list.add(proyectos.get(i).getNombre());
-            }
-            final StableArrayAdapter adapter = new StableArrayAdapter(this, R.layout.list_item, list);
+                    if (proyectos.size() == 0) {
 
-            cardView.setMinimumHeight(proyectos.size() * 100);
-            ListView misProyectosListView = new ListView(this);
-            misProyectosListView.setMinimumHeight(proyectos.size() * 100);
-            misProyectosListView.setAdapter(adapter);
-            misProyectosListView.setDivider(null);
-            misProyectosListView.setPadding(10,60,0,0);
-            cardView.addView(misProyectosListView);
+                        sinProyectosContent1.setVisibility(View.VISIBLE);
 
-            misProyectosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    Proyecto datosProyecto = proyectos.get(i);
-                    Intent intent = new Intent(DashboardActivity.this, DatosProyectoActivity.class);
-                    intent.putExtra("EXTRA_ID_PROYECTO", datosProyecto.getIdProyecto().toString());
-                    intent.putExtra("EXTRA_NOMBRE", datosProyecto.getNombre());
-                    intent.putExtra("EXTRA_ESTADO", datosProyecto.getEstado());
-                    intent.putExtra("EXTRA_FECHA_CREACION", sdf.format(datosProyecto.getFechaCreacion()));
-                    intent.putExtra("EXTRA_DESCRIPCION", datosProyecto.getDescripcion());
-                    if (datosProyecto.getFechaFinalizacion() != null) {
-                        intent.putExtra("EXTRA_FECHA_FIN", sdf.format(datosProyecto.getFechaFinalizacion()));
-                    }
-                    if (datosProyecto.getPropietario() != null) {
-                        intent.putExtra("EXTRA_ID_PROPIETARIO", datosProyecto.getPropietario().getIdUsuario().toString());
-                        String propietario = datosProyecto.getPropietario().getNombre()
-                                + " " + datosProyecto.getPropietario().getApellido();
-                        intent.putExtra("EXTRA_NOMBRE_PROPIETARIO", propietario);
+                    } else {
+                        final ArrayList<String> list = new ArrayList<>();
+                        for (int i = 0; i < proyectos.size(); ++i) {
+                            list.add(proyectos.get(i).getNombre());
+                        }
+                        final StableArrayAdapter adapter = new StableArrayAdapter(DashboardActivity.this,
+                                R.layout.list_item, list);
+
+                        misProyectosCardView.setMinimumHeight(proyectos.size() * 100);
+                        ListView misProyectosListView = new ListView(DashboardActivity.this);
+                        misProyectosListView.setMinimumHeight(proyectos.size() * 100);
+                        misProyectosListView.setAdapter(adapter);
+                        misProyectosListView.setDivider(null);
+                        misProyectosListView.setPadding(10, 60, 0, 0);
+                        misProyectosCardView.addView(misProyectosListView);
+
+                        misProyectosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Proyecto datosProyecto = proyectos.get(i);
+                                startActivity(datosProyecto);
+                            }
+                        });
                     }
 
-                    startActivity(intent);
+                } else {
+                    sinProyectosText1.setText("Ocurrio un error al recupear los datos");
+                    Toast.makeText(DashboardActivity.this,
+                            "Ocurrio un error al procesar la respuesta del Servidor",
+                            Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
 
-        } else {
-            Toast.makeText(this, "Ocurrio un error al procesar la respuesta del Servidor", Toast.LENGTH_SHORT).show();
-        }
-        //showProgress(false);
+            @Override
+            public void onFailure(Call<List<Proyecto>> call, Throwable t) {
+                sinProyectosText1.setText("Ocurrio un error al recupear los datos");
+                Toast.makeText(DashboardActivity.this,
+                        "Ocurrio un error al procesar la respuesta del Servidor",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Call<List<Proyecto>> call2 = service.listar();
+        call2.enqueue(new Callback<List<Proyecto>>() {
+            @Override
+            public void onResponse(Call<List<Proyecto>> call, Response<List<Proyecto>> response) {
+                if (response.isSuccessful()) {
+
+                    final List<Proyecto> proyectos = response.body();
+
+                    if (proyectos.size() == 0) {
+
+                        sinProyectosContent2.setVisibility(View.VISIBLE);
+
+                    } else {
+
+                        final ArrayList<String> list = new ArrayList<>();
+                        for (int i = 0; i < proyectos.size(); ++i) {
+                            list.add(proyectos.get(i).getNombre());
+                        }
+                        final StableArrayAdapter adapter = new StableArrayAdapter(DashboardActivity.this,
+                                R.layout.list_item, list);
+
+                        proyectosParticipandoCardView.setMinimumHeight(proyectos.size() * 100);
+                        ListView misProyectosListView = new ListView(DashboardActivity.this);
+                        misProyectosListView.setMinimumHeight(proyectos.size() * 100);
+                        misProyectosListView.setAdapter(adapter);
+                        misProyectosListView.setDivider(null);
+                        misProyectosListView.setPadding(10, 60, 0, 0);
+                        proyectosParticipandoCardView.addView(misProyectosListView);
+
+                        misProyectosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Proyecto datosProyecto = proyectos.get(i);
+                                startActivity(datosProyecto);
+                            }
+                        });
+                    }
+
+                } else {
+                    sinProyectosText2.setText("Ocurrio un error al recupear los datos");
+                    Toast.makeText(DashboardActivity.this,
+                            "Ocurrio un error al procesar la respuesta del Servidor",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Proyecto>> call, Throwable t) {
+                sinProyectosText2.setText("Ocurrio un error al recupear los datos");
+                Toast.makeText(DashboardActivity.this,
+                        "Ocurrio un error al procesar la respuesta del Servidor",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    @Override
-    public void onFailure(Call<List<Proyecto>> call, Throwable t) {
-        //showProgress(false);
-        Toast.makeText(this, "Ocurrio un error al invocar al servicio : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+    private void startActivity(Proyecto datosProyecto) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat(Constantes.FORMATO_FECHA);
+        Intent intent = new Intent(DashboardActivity.this, DatosProyectoActivity.class);
+        intent.putExtra("EXTRA_ID_PROYECTO", datosProyecto.getIdProyecto().toString());
+        intent.putExtra("EXTRA_NOMBRE", datosProyecto.getNombre());
+        intent.putExtra("EXTRA_ESTADO", datosProyecto.getEstado());
+        intent.putExtra("EXTRA_FECHA_CREACION", sdf.format(datosProyecto.getFechaCreacion()));
+        intent.putExtra("EXTRA_DESCRIPCION", datosProyecto.getDescripcion());
+        if (datosProyecto.getFechaFinalizacion() != null) {
+            intent.putExtra("EXTRA_FECHA_FIN", sdf.format(datosProyecto.getFechaFinalizacion()));
+        }
+        if (datosProyecto.getPropietario() != null) {
+            intent.putExtra("EXTRA_ID_PROPIETARIO", datosProyecto.getPropietario().getIdUsuario().toString());
+            String propietario = datosProyecto.getPropietario().getNombre()
+                    + " " + datosProyecto.getPropietario().getApellido();
+            intent.putExtra("EXTRA_NOMBRE_PROPIETARIO", propietario);
+        }
+
+        startActivity(intent);
+
     }
 
     private class StableArrayAdapter extends ArrayAdapter<String> {

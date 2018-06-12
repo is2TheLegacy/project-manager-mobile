@@ -19,7 +19,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +35,8 @@ import java.util.List;
 import java.util.UUID;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
+import alpha.proyectos.is2.fpuna.py.alpha.service.CategoriaProyectoService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.CategoriaProyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
@@ -38,6 +46,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
 
 
 /**
@@ -49,6 +59,7 @@ public class CrearProyectoActivity extends AppCompatActivity
 
 	private Button cearProyectoButton;
     private ProyectoService service;
+    private CategoriaProyectoService categoriasService;
     private UsuarioService usuarioService;
     private UUID uuid;
     private final Activity mContext = this;
@@ -56,9 +67,11 @@ public class CrearProyectoActivity extends AppCompatActivity
     private EditText nombreView;
     private EditText descripcionView;
     private EditText fechaFinView;
+    private Spinner propietarioView;
+    private Spinner categoriaView;
 
     private Date fechaFin;
-    private String categoria;
+    private CategoriaProyecto categoria;
     private Usuario propietario;
 
     @Override
@@ -71,10 +84,14 @@ public class CrearProyectoActivity extends AppCompatActivity
         nombreView = (EditText) findViewById(R.id.nombre);
         descripcionView = (EditText) findViewById(R.id.descripcion);
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
+        propietarioView = (Spinner) findViewById(R.id.usuarios_spinner);
+        categoriaView = (Spinner) findViewById(R.id.categoria_spinner);
 
         service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        categoriasService = (CategoriaProyectoService) ServiceBuilder.create(CategoriaProyectoService.class);
         usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
 
+        // Listar usuarios
         usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {
             @Override
             public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
@@ -103,6 +120,39 @@ public class CrearProyectoActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<Usuario>> call, Throwable t) {
+                ;
+            }
+        });
+
+        // Listar categorias
+        categoriasService.listar().enqueue(new Callback<List<CategoriaProyecto>>() {
+            @Override
+            public void onResponse(Call<List<CategoriaProyecto>> call, Response<List<CategoriaProyecto>> response) {
+                final List<String> nombreCategorias = new ArrayList<String>();
+                final List<CategoriaProyecto> categorias = response.body();
+                for (CategoriaProyecto categoria : categorias) {
+                    nombreCategorias.add(categoria.getNombre());
+                }
+                Spinner spinner = (Spinner) findViewById(R.id.categoria_spinner);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        categoria = categorias.get(i);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                    }
+                });
+
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mContext,
+                        android.R.layout.simple_spinner_item, nombreCategorias);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(dataAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<CategoriaProyecto>> call, Throwable t) {
                 ;
             }
         });
@@ -158,6 +208,16 @@ public class CrearProyectoActivity extends AppCompatActivity
             fechaFinView.setError(getString(R.string.error_field_required));
             focusView = fechaFinView;
             cancel = true;
+        }  else if (propietario == null) {
+            Toast.makeText(CrearProyectoActivity.this, "Debe seleccionar el propietario del proyecto",
+                    Toast.LENGTH_SHORT).show();
+            focusView = propietarioView;
+            cancel = true;
+        }  else if (categoria == null) {
+            Toast.makeText(CrearProyectoActivity.this, "Debe seleccionar la categoria del proyecto",
+                    Toast.LENGTH_SHORT).show();
+            focusView = categoriaView;
+            cancel = true;
         }
 
         if (cancel) {
@@ -166,7 +226,7 @@ public class CrearProyectoActivity extends AppCompatActivity
             cearProyectoButton.setText(R.string.action_guardar);
         } else {
             uuid = UUID.randomUUID();
-            Proyecto proyecto = new Proyecto(uuid, nombre, descripcion, fechaFin.getTime(), propietario);
+            Proyecto proyecto = new Proyecto(uuid, nombre, descripcion, fechaFin.getTime(), propietario, categoria);
             Call<ResponseBody> call = service.crear(proyecto);
             call.enqueue(this);
         }
@@ -177,13 +237,16 @@ public class CrearProyectoActivity extends AppCompatActivity
         if (response.isSuccessful()) {
             showMessageSuccess("Exitoso", "Proyecto creada exitosamente");
         } else {
+            ResponseBody body = response.errorBody();
+            String json = slurp(body.byteStream(), 1024);
+            System.err.println("Error crear proyecto : " + json);
             showMessage("Error", "Ocurrio un error al realizar la operación");
         }
     }
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
-        ;
+        showMessage("Error", "Ocurrio un error al realizar la operación");
     }
 
     public static class DatePickerFragment extends DialogFragment {

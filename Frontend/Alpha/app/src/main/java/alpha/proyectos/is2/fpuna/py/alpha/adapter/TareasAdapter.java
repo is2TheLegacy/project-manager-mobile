@@ -12,8 +12,10 @@ import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
+import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
 import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.activity.DashboardActivity;
 import alpha.proyectos.is2.fpuna.py.alpha.activity.DatosProyectoActivity;
@@ -23,6 +25,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder> {
 
     private List<Tarea> mDataset;
+    private List<Integer> tareasSeleccionadas;
     private Activity mContext;
     SimpleDateFormat sdf;
     
@@ -47,7 +50,8 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
     public TareasAdapter(List<Tarea> myDataset, Activity mContext) {
         mDataset = myDataset;
         this.mContext = mContext;
-        sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf = new SimpleDateFormat(Constantes.FORMATO_FECHA);
+        tareasSeleccionadas = new ArrayList<>();
     }
 
     // Create new views (invoked by the layout manager)
@@ -68,6 +72,9 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
         holder.cbSelect.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    tareasSeleccionadas.add(position);
+                }
                 System.err.println("Seleccionado : " + position);
             }
         });
@@ -90,6 +97,10 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    public List<Integer> getTareasSeleccionadas() {
+        return tareasSeleccionadas;
     }
 
 }

@@ -33,6 +33,18 @@ public class Tarea {
         this.usuarioAsignado = usuarioAsignado;
     }
 
+    public Tarea(UUID id, String nombre, String descripcion, Date fechaEstimadaInicio,
+                 Date fechaEstimadaFin, String estado) {
+        this.idTarea = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.fechaEstimadaInicio = fechaEstimadaInicio;
+        this.fechaEstimadaFin = fechaEstimadaFin;
+        this.prioridad = prioridad;
+        this.usuarioAsignado = usuarioAsignado;
+        this.estado = estado;
+    }
+
     public UUID getIdTarea() {
         return idTarea;
     }

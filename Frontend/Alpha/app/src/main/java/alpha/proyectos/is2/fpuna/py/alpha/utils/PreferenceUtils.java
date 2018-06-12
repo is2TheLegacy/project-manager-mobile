@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
+import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+
 import static alpha.proyectos.is2.fpuna.py.alpha.Constantes.SESSION_AUTH_TOKEN;
 
 /**
@@ -47,6 +50,14 @@ public class PreferenceUtils {
         SharedPreferences.Editor editor = getEditor();
         editor.putString(TOKEN_FIREBASE, token);
         editor.commit();
+    }
+
+    public Usuario getUsuarioLogueado() {
+        String idUsuario = getPreferences().getString(Constantes.SESSION_ID_USUARIO, null);
+        if (idUsuario != null) {
+            return new Usuario(idUsuario);
+        }
+        return null;
     }
 
     public String getTokenFirebase() {

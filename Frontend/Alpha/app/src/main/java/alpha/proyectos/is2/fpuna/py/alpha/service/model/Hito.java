@@ -10,16 +10,16 @@ public class Hito {
     private UUID idHito;
 	private String nombre;
 	private String descripcion;
-    private Date fechaInicio;
-	private Date fechaEstimadaFin;
+    private Long fechaInicio;
+	private Long fechaEstimadaFin;
     private Usuario usuarioCreador;
     private Proyecto proyecto;
 	
 	public Hito() {
 	}
 
-    public Hito(UUID id, String nombre, String descripcion, Date fechaInicio,
-                 Date fechaEstimadaFin, Usuario usuarioCreador, Proyecto proyecto) {
+    public Hito(UUID id, String nombre, String descripcion, Long fechaInicio,
+                Long fechaEstimadaFin, Usuario usuarioCreador, Proyecto proyecto) {
         this.idHito = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -70,19 +70,19 @@ public class Hito {
     }
 
 
-    public Date getFechaInicio() {
+    public Long getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(Long fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaEstimadaFin() {
+    public Long getFechaEstimadaFin() {
         return fechaEstimadaFin;
     }
 
-    public void setFechaEstimadaFin(Date fechaEstimadaFin) {
+    public void setFechaEstimadaFin(Long fechaEstimadaFin) {
         this.fechaEstimadaFin = fechaEstimadaFin;
     }
 }

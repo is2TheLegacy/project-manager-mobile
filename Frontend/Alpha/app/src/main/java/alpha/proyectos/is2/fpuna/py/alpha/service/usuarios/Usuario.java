@@ -15,6 +15,10 @@ public class Usuario {
     private String apellido;
     private String sexo;
 
+    public Usuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
     public Usuario(String idUsuario, String alias, String email, String nombre, String apellido, String sexo) {
         this.idUsuario = idUsuario;
         this.alias = alias;
