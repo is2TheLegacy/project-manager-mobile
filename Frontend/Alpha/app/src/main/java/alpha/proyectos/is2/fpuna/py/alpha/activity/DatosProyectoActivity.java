@@ -39,6 +39,7 @@ public class DatosProyectoActivity extends AppCompatActivity {
         idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
         final String nombre = getIntent().getStringExtra("EXTRA_NOMBRE");
         final String estado = getIntent().getStringExtra("EXTRA_ESTADO");
+        final String categoria = getIntent().getStringExtra("EXTRA_CATEGORIA");
         final String descripcion = getIntent().getStringExtra("EXTRA_DESCRIPCION");
         final String fechaCreacion = getIntent().getStringExtra("EXTRA_FECHA_CREACION");
         final String fechaFin = getIntent().getStringExtra("EXTRA_FECHA_FIN");
@@ -56,6 +57,9 @@ public class DatosProyectoActivity extends AppCompatActivity {
 
         TextView estadoView = (TextView) findViewById(R.id.estado);
         estadoView.setText(estado);
+
+        TextView categoriaView = (TextView) findViewById(R.id.categoria);
+        categoriaView.setText(categoria);
 
         TextView fechaCreacionView = (TextView) findViewById(R.id.fechaCreacion);
         fechaCreacionView.setText(fechaCreacion);

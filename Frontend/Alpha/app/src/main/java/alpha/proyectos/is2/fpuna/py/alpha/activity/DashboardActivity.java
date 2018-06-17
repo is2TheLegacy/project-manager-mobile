@@ -43,6 +43,9 @@ public class DashboardActivity extends BaseActivity {
     private TextView sinProyectosText1;
     private TextView sinProyectosText2;
 
+    private ProyectoService service;
+    public static boolean recargar = false;
+
     @Override
     protected void inint() {
         loadLayout(R.layout.activity_dashboard, "Dashboard");
@@ -67,7 +70,21 @@ public class DashboardActivity extends BaseActivity {
         sinProyectosContent2 = (LinearLayout) findViewById(R.id.sin_proyectos_content_2);
         sinProyectosText1 = (TextView) findViewById(R.id.sin_proyectos_text_1);
         sinProyectosText2 = (TextView) findViewById(R.id.sin_proyectos_text_2);
-        ProyectoService service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        cargarDatos();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (recargar) {
+            System.err.println("Reiniciando pantalla del Dashoard");
+            cargarDatos();
+        }
+    }
+
+    private void cargarDatos() {
 
         Call<List<Proyecto>> call1 = service.listar();
         call1.enqueue(new Callback<List<Proyecto>>() {
@@ -82,6 +99,7 @@ public class DashboardActivity extends BaseActivity {
                         sinProyectosContent1.setVisibility(View.VISIBLE);
 
                     } else {
+                        System.err.println("Reiniciando pantalla cargando datos");
                         final ArrayList<String> list = new ArrayList<>();
                         for (int i = 0; i < proyectos.size(); ++i) {
                             list.add(proyectos.get(i).getNombre());
@@ -89,7 +107,7 @@ public class DashboardActivity extends BaseActivity {
                         final StableArrayAdapter adapter = new StableArrayAdapter(DashboardActivity.this,
                                 R.layout.list_item, list);
 
-                        misProyectosCardView.setMinimumHeight(proyectos.size() * 100);
+                        misProyectosCardView.setMinimumHeight(proyectos.size() * 70);
                         ListView misProyectosListView = new ListView(DashboardActivity.this);
                         misProyectosListView.setMinimumHeight(proyectos.size() * 100);
                         misProyectosListView.setAdapter(adapter);
@@ -144,7 +162,7 @@ public class DashboardActivity extends BaseActivity {
                         final StableArrayAdapter adapter = new StableArrayAdapter(DashboardActivity.this,
                                 R.layout.list_item, list);
 
-                        proyectosParticipandoCardView.setMinimumHeight(proyectos.size() * 100);
+                        proyectosParticipandoCardView.setMinimumHeight(proyectos.size() * 70);
                         ListView misProyectosListView = new ListView(DashboardActivity.this);
                         misProyectosListView.setMinimumHeight(proyectos.size() * 100);
                         misProyectosListView.setAdapter(adapter);
@@ -190,6 +208,9 @@ public class DashboardActivity extends BaseActivity {
         intent.putExtra("EXTRA_DESCRIPCION", datosProyecto.getDescripcion());
         if (datosProyecto.getFechaFinalizacion() != null) {
             intent.putExtra("EXTRA_FECHA_FIN", sdf.format(datosProyecto.getFechaFinalizacion()));
+        }
+        if (datosProyecto.getCategoria() != null) {
+            intent.putExtra("EXTRA_CATEGORIA", datosProyecto.getCategoria().getNombre());
         }
         if (datosProyecto.getPropietario() != null) {
             intent.putExtra("EXTRA_ID_PROPIETARIO", datosProyecto.getPropietario().getIdUsuario().toString());

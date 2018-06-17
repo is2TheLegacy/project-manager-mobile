@@ -23,4 +23,5 @@ public class Constantes {
     public static final String SESSION_EMAIL = "session.user.email";
 
     public static final String FORMATO_FECHA = "dd/MM/yyyy";
+    public static final String FORMATO_FECHA_2 = "yyyy-MM-dd";
 }

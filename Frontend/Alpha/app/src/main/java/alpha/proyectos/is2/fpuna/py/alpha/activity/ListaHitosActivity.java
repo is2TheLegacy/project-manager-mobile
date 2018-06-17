@@ -88,6 +88,7 @@ public class ListaHitosActivity extends AppCompatActivity implements Callback<Li
     @Override
     public void onFailure(Call<List<Hito>> call, Throwable t) {
         showProgress(false);
+        System.err.println("Error - listar hitos : " + t.getMessage());
         Toast.makeText(this, "Ocurrio un error al invocar al servicio : " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 

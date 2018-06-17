@@ -57,7 +57,7 @@ import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
 public class CrearProyectoActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener, Callback<ResponseBody> {
 
-	private Button cearProyectoButton;
+    private Button cearProyectoButton;
     private ProyectoService service;
     private CategoriaProyectoService categoriasService;
     private UsuarioService usuarioService;
@@ -169,9 +169,16 @@ public class CrearProyectoActivity extends AppCompatActivity
         cancelarCuentaButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                DashboardActivity.recargar = false;
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        DashboardActivity.recargar = false;
+        super.onBackPressed();
     }
 
     public void datePicker(View view) {
@@ -235,6 +242,7 @@ public class CrearProyectoActivity extends AppCompatActivity
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
+            DashboardActivity.recargar = true;
             showMessageSuccess("Exitoso", "Proyecto creada exitosamente");
         } else {
             ResponseBody body = response.errorBody();

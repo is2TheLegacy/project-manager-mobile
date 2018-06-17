@@ -21,7 +21,7 @@ public interface HitoService {
     Call<List<Hito>> listar();
 
     @POST(BASE_URL_API + "/proyectos/hitos")
-    Call<ResponseBody> crear(@Body Hito hito);
+    Call<ResponseBody> crear(@Body CrearHito hito);
 
     @DELETE(BASE_URL_API + "/proyectos/hitos/{id}")
     Call<ResponseBody> eliminar(@Path("id") UUID id);

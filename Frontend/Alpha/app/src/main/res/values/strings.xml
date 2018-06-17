@@ -36,6 +36,7 @@
     <string name="prompt_descripcion">Descripción</string>
     <string name="prompt_fecha_creacion">Fecha de Creación</string>
     <string name="prompt_estado">Estado</string>
+    <string name="prompt_categoria">Categoria</string>
     <string name="prompt_propietario">Propietario</string>
 
     <string name="prompt_fecha_inicio_estimada">Fecha estimada de inicio</string>

@@ -83,7 +83,8 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, EditarTareaActivity.class);
-                intent.putExtra("EXTRA_ID_TAREA", tarea.getIdTarea());
+                System.err.println("Id tarea adapter : " + tarea.getIdTarea());
+                intent.putExtra("EXTRA_ID_TAREA", tarea.getIdTarea().toString());
                 intent.putExtra("EXTRA_NOMBRE", tarea.getNombre());
                 intent.putExtra("EXTRA_DESCRIPCION", tarea.getDescripcion());
                 intent.putExtra("EXTRA_ESTADO", tarea.getEstado());

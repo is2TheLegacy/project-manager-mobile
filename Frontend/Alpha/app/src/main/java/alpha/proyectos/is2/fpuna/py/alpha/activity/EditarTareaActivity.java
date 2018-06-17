@@ -100,6 +100,7 @@ public class EditarTareaActivity extends AppCompatActivity
         nombre = getIntent().getStringExtra("EXTRA_NOMBRE");
         estadoActual = getIntent().getStringExtra("EXTRA_ESTADO");
         descripcion = getIntent().getStringExtra("EXTRA_DESCRIPCION");
+        System.err.println("Id tarea : " + idTarea);
 
         nombreView.setText(nombre);
         descripcionView.setText(descripcion);
@@ -237,17 +238,18 @@ public class EditarTareaActivity extends AppCompatActivity
             fechaInicioView.setError(getString(R.string.error_field_required));
             focusView = fechaInicioView;
             cancel = true;
-        } else if (TextUtils.isEmpty(fin)) {
+        }/* else if (TextUtils.isEmpty(fin)) {
             fechaFinView.setError(getString(R.string.error_field_required));
             focusView = fechaFinView;
             cancel = true;
-        }
+        }*/
 
         if (cancel) {
             focusView.requestFocus();
             guardarTareaButton.setEnabled(true);
             guardarTareaButton.setText(R.string.action_guardar);
         } else {
+            System.err.println("Id tarea : " + idTarea);
             UUID id = UUID.fromString(idTarea);
             Tarea tarea = new Tarea(id, nombre, descripcion, fechaInicio, fechaFin, estado);
             Call<ResponseBody> call = service.editar(id, tarea);

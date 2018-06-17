@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,7 +29,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 
+import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
 import alpha.proyectos.is2.fpuna.py.alpha.R;
+import alpha.proyectos.is2.fpuna.py.alpha.service.CrearHito;
 import alpha.proyectos.is2.fpuna.py.alpha.service.HitoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
@@ -62,6 +65,7 @@ public class CrearHitoActivity extends AppCompatActivity
 
     private EditText nombreView;
     private EditText descripcionView;
+    private EditText fechaInicioView;
     private EditText fechaFinView;
 
     private Date fechaInicio;
@@ -80,6 +84,7 @@ public class CrearHitoActivity extends AppCompatActivity
 
         nombreView = (EditText) findViewById(R.id.nombre);
         descripcionView = (EditText) findViewById(R.id.descripcion);
+        fechaInicioView = (EditText) findViewById(R.id.fechaInicio);
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
 
         service = (HitoService) ServiceBuilder.create(HitoService.class);
@@ -128,6 +133,7 @@ public class CrearHitoActivity extends AppCompatActivity
 
         String nombre = nombreView.getText().toString();
         String descripcion = descripcionView.getText().toString();
+        String inicio = fechaInicioView.getText().toString();
         String fin = fechaFinView.getText().toString();
 
         if (TextUtils.isEmpty(nombre)) {
@@ -137,6 +143,10 @@ public class CrearHitoActivity extends AppCompatActivity
         } else if (TextUtils.isEmpty(descripcion)) {
             descripcionView.setError(getString(R.string.error_field_required));
             focusView = descripcionView;
+            cancel = true;
+        } else if (TextUtils.isEmpty(inicio)) {
+            fechaInicioView.setError(getString(R.string.error_field_required));
+            focusView = fechaInicioView;
             cancel = true;
         } else if (TextUtils.isEmpty(fin)) {
             fechaFinView.setError(getString(R.string.error_field_required));
@@ -151,9 +161,13 @@ public class CrearHitoActivity extends AppCompatActivity
         } else {
             uuid = UUID.randomUUID();
             UUID uuidProyecto = UUID.fromString(idProyecto);
+            System.err.println("Id proyecto : " + idProyecto);
             Proyecto proyecto = new Proyecto(uuidProyecto);
+            System.err.println("Error crear : " + uuidProyecto);
             Usuario usuarioCreador = preferenceUtils.getUsuarioLogueado();
-            Hito hito = new Hito(uuid, nombre, descripcion, fechaInicio.getTime(), fechaFin.getTime(), usuarioCreador, proyecto);
+            System.err.println("Error crear usuario : " + usuarioCreador.getIdUsuario());
+            CrearHito hito = new CrearHito(uuid, nombre, descripcion, fechaInicio.getTime(),
+                    fechaFin.getTime(), usuarioCreador, proyecto);
             Call<ResponseBody> call = service.crear(hito);
             call.enqueue(this);
         }
