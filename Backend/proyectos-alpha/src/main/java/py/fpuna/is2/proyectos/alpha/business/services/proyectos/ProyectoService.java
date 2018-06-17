@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,6 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import py.fpuna.is2.proyectos.alpha.business.model.Hito;
 import py.fpuna.is2.proyectos.alpha.business.model.Proyecto;
 import py.fpuna.is2.proyectos.alpha.business.services.AbstractFacade;
 
@@ -93,5 +95,15 @@ public class ProyectoService extends AbstractFacade<Proyecto>{
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
         return String.valueOf(super.count());
+    }
+    
+    
+    
+    @GET
+    @Path("{idProyecto}/hitos")
+    public List<Hito> getAllMilestonesOfProject(@PathParam("idProyecto")UUID idProyecto) {
+        Query q = em.createNamedQuery("Hito.findByProyecto", Hito.class);
+        q.setParameter("idProyecto", idProyecto);
+        return q.getResultList();
     }
 }

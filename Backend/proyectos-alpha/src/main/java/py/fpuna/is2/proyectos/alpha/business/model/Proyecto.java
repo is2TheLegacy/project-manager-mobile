@@ -85,7 +85,6 @@ public class Proyecto implements Serializable {
     @JoinColumn(name = "categoria", referencedColumnName = "id_categoria_proyecto")
     @ManyToOne
     private CategoriaProyecto categoria;
-    @JsonIgnore
     @JoinColumn(name = "propietario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario propietario;
@@ -245,9 +244,5 @@ public class Proyecto implements Serializable {
 
     public void setTareaCollection(Collection<Tarea> tareaCollection) {
         this.tareaCollection = tareaCollection;
-    }
-    
-    public static void main(String[] args) {
-        System.out.println(UUID.randomUUID().toString());
     }
 }

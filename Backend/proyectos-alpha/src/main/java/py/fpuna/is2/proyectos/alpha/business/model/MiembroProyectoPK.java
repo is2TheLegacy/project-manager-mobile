@@ -10,7 +10,6 @@ import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
 /**

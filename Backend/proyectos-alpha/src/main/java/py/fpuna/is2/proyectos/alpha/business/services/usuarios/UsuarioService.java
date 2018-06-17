@@ -86,7 +86,7 @@ public class UsuarioService extends AbstractFacade<Usuario> {
     @GET
     @Override
     public List<Usuario> findAll() {
-        return super.findAll();
+         return super.findAll();
     }
 
     @GET
