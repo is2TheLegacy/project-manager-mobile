@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="alpha.proyectos.is2.fpuna.py.alpha.activity.ListaProyectoActivity">
+    tools:context="alpha.proyectos.is2.fpuna.py.alpha.activity.ListaHitosActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,11 +20,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
-        xmlns:tools="http://schemas.android.com/tools"
-        android:paddingTop="48dp"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="48dp">
 
         <ProgressBar
             android:id="@+id/progressbar_login"
@@ -34,6 +33,43 @@
             android:layout_centerInParent="true"
             android:indeterminate="true"
             android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/action_agregar"
+                style="?android:textAppearanceSmall"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="8dp"
+                android:layout_width="0dip"
+                android:layout_weight="50"
+                android:layout_height="match_parent"
+                android:text="@string/action_agregar"
+                android:textStyle="bold"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/background_light"/>
+
+            <Button
+                android:id="@+id/action_quitar"
+                style="?android:textAppearanceSmall"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="8dp"
+                android:layout_width="0dip"
+                android:layout_weight="50"
+                android:layout_height="match_parent"
+                android:text="Quitar"
+                android:textStyle="bold"
+                android:background="@color/colorAccentOpaque"
+                android:textColor="@android:color/background_light"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/sin_datos_content"
@@ -60,6 +96,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/my_recycler_view"
             android:scrollbars="vertical"
+            android:layout_above="@id/buttons"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

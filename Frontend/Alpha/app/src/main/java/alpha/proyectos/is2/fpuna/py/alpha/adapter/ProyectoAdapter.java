@@ -1,5 +1,7 @@
 package alpha.proyectos.is2.fpuna.py.alpha.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +11,21 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
 import alpha.proyectos.is2.fpuna.py.alpha.R;
+import alpha.proyectos.is2.fpuna.py.alpha.activity.EditarHitoActivity;
+import alpha.proyectos.is2.fpuna.py.alpha.activity.VerProyectoActivity;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 
 public class ProyectoAdapter extends RecyclerView.Adapter<ProyectoAdapter.ViewHolder> {
 
     private List<Proyecto> mDataset;
+    private Activity mContext;
+    private static final SimpleDateFormat sdf = new SimpleDateFormat(Constantes.FORMATO_FECHA);
     
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,8 +41,9 @@ public class ProyectoAdapter extends RecyclerView.Adapter<ProyectoAdapter.ViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProyectoAdapter(List<Proyecto> myDataset) {
-        mDataset = myDataset;
+    public ProyectoAdapter(List<Proyecto> myDataset, Activity mContext) {
+        this.mDataset = myDataset;
+        this.mContext = mContext;
     }
 
     // Create new views (invoked by the layout manager)
@@ -48,13 +57,32 @@ public class ProyectoAdapter extends RecyclerView.Adapter<ProyectoAdapter.ViewHo
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Proyecto proyecto = mDataset.get(position);
+        final Proyecto proyecto = mDataset.get(position);
         holder.mTextView1.setText(proyecto.getNombre());
 
         holder.mTextView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ;
+                Intent intent = new Intent(mContext, VerProyectoActivity.class);
+                System.err.println("Id hito : " + proyecto.getIdProyecto());
+                intent.putExtra("EXTRA_ID_PROYECTO", proyecto.getIdProyecto().toString());
+                intent.putExtra("EXTRA_NOMBRE", proyecto.getNombre());
+                intent.putExtra("EXTRA_ESTADO", proyecto.getEstado());
+                intent.putExtra("EXTRA_FECHA_CREACION", sdf.format(proyecto.getFechaCreacion()));
+                intent.putExtra("EXTRA_DESCRIPCION", proyecto.getDescripcion());
+                if (proyecto.getFechaFinalizacion() != null) {
+                    intent.putExtra("EXTRA_FECHA_FIN", sdf.format(proyecto.getFechaFinalizacion()));
+                }
+                if (proyecto.getCategoria() != null) {
+                    intent.putExtra("EXTRA_CATEGORIA", proyecto.getCategoria().getNombre());
+                }
+                if (proyecto.getPropietario() != null) {
+                    intent.putExtra("EXTRA_ID_PROPIETARIO", proyecto.getPropietario().getIdUsuario().toString());
+                    String propietario = proyecto.getPropietario().getNombre()
+                            + " " + proyecto.getPropietario().getApellido();
+                    intent.putExtra("EXTRA_NOMBRE_PROPIETARIO", propietario);
+                }
+                mContext.startActivity(intent);
             }
         });
     }

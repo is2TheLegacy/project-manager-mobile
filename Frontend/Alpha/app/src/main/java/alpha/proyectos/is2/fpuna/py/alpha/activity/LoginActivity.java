@@ -112,16 +112,19 @@ public class LoginActivity extends AppCompatActivity implements Callback<Respues
         if (response.isSuccessful()) {
             RespuestaLogin res = response.body();
             if (res.getStatus() == 200) {
-                SharedPreferences prefs = getSharedPreferences(Constantes.PROYECTOS_ALPHA_PREFS_NAME, 0);
-                SharedPreferences.Editor editor = prefs.edit();
                 String authToken = res.getAuthToken().toString();
+                /*SharedPreferences prefs = getSharedPreferences(Constantes.PROYECTOS_ALPHA_PREFS_NAME, 0);
+                SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(Constantes.SESSION_AUTH_TOKEN, authToken);
-                //editor.putString(Constantes.SESSION_ID_USUARIO, res.getUser().getIdUsuario().toString());
+                System.err.println("Login : " + res.getUser().getIdUsuario().toString());
+                editor.putString(Constantes.SESSION_ID_USUARIO, res.getUser().getIdUsuario().toString());
                 editor.putString(Constantes.SESSION_ALIAS, res.getUser().getAlias());
                 editor.putString(Constantes.SESSION_NOMBRE, res.getUser().getNombre());
                 editor.putString(Constantes.SESSION_APELLIDO, res.getUser().getApellido());
                 editor.putString(Constantes.SESSION_EMAIL, res.getUser().getEmail());
-                editor.commit();
+                editor.commit();*/
+                preferenceUtils.guardarDatosUsuario(res.getUser().getIdUsuario().toString(),
+                        res.getUser().getNombre(), res.getUser().getApellido(), authToken);
 
                 // Registrar token del firebase
                 String tokenFirebase = preferenceUtils.getTokenFirebase();

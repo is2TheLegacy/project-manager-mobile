@@ -79,7 +79,7 @@ public class ListaTareasActivity extends BaseActivity implements Callback<List<T
             if (tareas.size() == 0) {
                 sinDatos.setVisibility(View.VISIBLE);
             } else {
-                mAdapter = new TareasAdapter(tareas, this);
+                mAdapter = new TareasAdapter(tareas, ListaTareasActivity.this);
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.setVisibility(View.VISIBLE);
             }

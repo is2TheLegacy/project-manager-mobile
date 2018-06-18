@@ -27,7 +27,40 @@ public class ServiceBuilder {
                 Request original = chain.request();
 
                 Request request = original.newBuilder()
-                        .header("Token", "z123_gthffwA")
+                        //.header("Authorization", "z123_gthffwA")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        OkHttpClient client = httpClient.build();
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constantes.API_SERVER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+
+        return retrofit.create(cls);
+    }
+
+    public static Object create(Class<?> cls, final String token) {
+
+        System.err.println("Auth Token : " + token);
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+
+                Request request = original.newBuilder()
+                        .header("Authorization", token)
                         .method(original.method(), original.body())
                         .build();
 

@@ -63,6 +63,7 @@
 
         <activity
             android:name=".activity.ListaProyectoActivity"
+            android:label="Proyectos"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -96,8 +97,43 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity
+            android:name=".activity.EditarHitoActivity"
+            android:label="@string/title_activity_editar_hito"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.TareasHitoActivity"
+            android:label="@string/title_activity_tareas_hito"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.CrearTareaHitoActivity"
+            android:label="@string/title_activity_crear_tarea"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
             android:name=".activity.ComentariosActivity"
             android:label="@string/title_activity_comentarios"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.SolicitudesActivity"
+            android:label="Solicitudes de colaboración"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.VerProyectoActivity"
+            android:label="Datos Proyecto"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.SolicitarColaborarActivity"
+            android:label="Solicitar Colaborar"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.DatosSolicitudActivity"
+            android:label="Datos Solicitud"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity

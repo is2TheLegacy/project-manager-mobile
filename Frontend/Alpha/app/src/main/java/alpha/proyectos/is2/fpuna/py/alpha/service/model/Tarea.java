@@ -18,6 +18,9 @@ public class Tarea {
 	private Date fechaEstimadaFin;
     private short porcentajeRealizado;
     private Usuario usuarioAsignado;
+    private Usuario usuarioCreador;
+    private Proyecto proyecto;
+    private Hito hito;
 	
 	public Tarea() {
 	}
@@ -131,5 +134,29 @@ public class Tarea {
 
     public void setFechaEstimadaFin(Date fechaEstimadaFin) {
         this.fechaEstimadaFin = fechaEstimadaFin;
+    }
+
+    public Usuario getUsuarioCreador() {
+        return usuarioCreador;
+    }
+
+    public void setUsuarioCreador(Usuario usuarioCreador) {
+        this.usuarioCreador = usuarioCreador;
+    }
+
+    public Proyecto getProyecto() {
+        return proyecto;
+    }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+    }
+
+    public Hito getHito() {
+        return hito;
+    }
+
+    public void setHito(Hito hito) {
+        this.hito = hito;
     }
 }

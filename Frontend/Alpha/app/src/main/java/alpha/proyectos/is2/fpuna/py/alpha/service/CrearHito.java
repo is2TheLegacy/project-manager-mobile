@@ -27,6 +27,16 @@ public class CrearHito {
         this.proyecto = proyecto;
     }
 
+    public CrearHito(UUID id, String nombre, String descripcion, Long fechaInicio,
+                     Long fechaEstimadaFin, Proyecto proyecto) {
+        this.idHito = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.fechaInicio = fechaInicio;
+        this.fechaEstimadaFin = fechaEstimadaFin;
+        this.proyecto = proyecto;
+    }
+
     public UUID getIdHito() {
         return idHito;
     }

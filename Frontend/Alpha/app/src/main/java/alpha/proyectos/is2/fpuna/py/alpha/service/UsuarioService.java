@@ -2,6 +2,7 @@ package alpha.proyectos.is2.fpuna.py.alpha.service;
 
 import java.util.List;
 
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -34,5 +35,11 @@ public interface UsuarioService {
 
     @DELETE(BASE_URL_API + "/usuarios/{uuid}")
     Call<ResponseBody> delete(@Path("uuid") String uuid);
+
+    @GET(BASE_URL_API + "/usuarios/{uuid}/proyectos/propios")
+    Call<List<Proyecto>> getMisProyectos(@Path("uuid") String uuid);
+
+    @GET(BASE_URL_API + "/usuarios/{uuid}/proyectos/colaborando")
+    Call<List<Proyecto>> getProyectosColaborando(@Path("uuid") String uuid);
 
 }

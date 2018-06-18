@@ -1,5 +1,6 @@
 package alpha.proyectos.is2.fpuna.py.alpha.service;
 
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -28,6 +29,21 @@ public interface ProyectoService {
 
     @DELETE(BASE_URL_API + "/proyectos/{id}")
     Call<ResponseBody> eliminar(@Path("id") UUID id);
+
+    @GET(BASE_URL_API + "/proyectos/{id}/hitos")
+    Call<List<Hito>> listarHitos(@Path("id") UUID id);
+
+    @GET(BASE_URL_API + "/proyectos/{id}/solicitudes-colaboracion")
+    Call<List<SolicitudesColaboracion>> listarSolicitudes(@Path("id") UUID id);
+
+    @POST(BASE_URL_API + "/proyectos/solicitudes-colaboracion")
+    Call<ResponseBody> crearSolicitud(@Body SolicitudesColaboracion datos);
+
+    @PUT(BASE_URL_API + "/proyectos/solicitudes-colaboracion/{id}/aceptar")
+    Call<ResponseBody> acpetarSolicitud(@Path("id") UUID id);
+
+    @PUT(BASE_URL_API + "/proyectos/solicitudes-colaboracion/{id}/rechazar")
+    Call<ResponseBody> rechazarSolicitud(@Path("id") UUID id);
 
 }
 

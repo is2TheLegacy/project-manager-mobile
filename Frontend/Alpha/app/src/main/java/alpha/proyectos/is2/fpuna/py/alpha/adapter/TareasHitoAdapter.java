@@ -22,7 +22,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.activity.DatosProyectoActivity;
 import alpha.proyectos.is2.fpuna.py.alpha.activity.EditarTareaActivity;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 
-public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder> {
+public class TareasHitoAdapter extends RecyclerView.Adapter<TareasHitoAdapter.ViewHolder> {
 
     private List<Tarea> mDataset;
     private List<Integer> tareasSeleccionadas;
@@ -47,7 +47,7 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TareasAdapter(List<Tarea> myDataset, Activity mContext) {
+    public TareasHitoAdapter(List<Tarea> myDataset, Activity mContext) {
         mDataset = myDataset;
         this.mContext = mContext;
         sdf = new SimpleDateFormat(Constantes.FORMATO_FECHA);
@@ -56,8 +56,8 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
 
     // Create new views (invoked by the layout manager)
     @Override
-    public TareasAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lista_tareas, parent, false);
+    public TareasHitoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lista_tareas_hito, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -83,9 +83,8 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, EditarTareaActivity.class);
-                System.err.println("Id tarea adapter : " + tarea.getIdTarea());
-                intent.putExtra("EXTRA_ID_TAREA", tarea.getIdTarea().toString());
-                intent.putExtra("EXTRA_ID_PROYECTO", tarea.getProyecto().getIdProyecto().toString());
+                intent.putExtra("EXTRA_ID_TAREA", tarea.getProyecto().getIdProyecto().toString());
+                intent.putExtra("EXTRA_ID_PROYECTO", tarea.getIdTarea().toString());
                 if (tarea.getHito() != null) {
                     intent.putExtra("EXTRA_ID_HITO", tarea.getHito().getIdHito().toString());
                 }

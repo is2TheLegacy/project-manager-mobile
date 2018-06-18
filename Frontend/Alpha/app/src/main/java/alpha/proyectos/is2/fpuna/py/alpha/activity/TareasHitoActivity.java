@@ -1,7 +1,6 @@
 package alpha.proyectos.is2.fpuna.py.alpha.activity;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -21,64 +19,90 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
-import alpha.proyectos.is2.fpuna.py.alpha.adapter.HitosAdapter;
-import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
-import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
+import alpha.proyectos.is2.fpuna.py.alpha.adapter.TareasAdapter;
+import alpha.proyectos.is2.fpuna.py.alpha.adapter.TareasHitoAdapter;
+import alpha.proyectos.is2.fpuna.py.alpha.service.CrearTareaData;
 import alpha.proyectos.is2.fpuna.py.alpha.service.HitoService;
-import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
+import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
+import alpha.proyectos.is2.fpuna.py.alpha.service.TareaService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Pantalla de listado de Hitos
+ * Pantalla de listado de tareas
  * @author federico.torres
  */
-public class ListaHitosActivity extends AppCompatActivity implements Callback<List<Hito>> {
+public class TareasHitoActivity extends AppCompatActivity implements Callback<List<Tarea>> {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private TareasHitoAdapter mAdapter;
     private ProgressBar progressBar;
     private LinearLayout sinDatos;
+    private List<Tarea> tareas;
+    private TareaService tareaService;
+    private String idHito;
+    private String idProyecto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_hitos);
+        setContentView(R.layout.activity_tareas_hito);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final String idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
         progressBar = (ProgressBar) findViewById(R.id.progressbar_login);
         mRecyclerView = getRecyclerView(R.id.my_recycler_view);
         sinDatos = (LinearLayout) findViewById(R.id.sin_datos_content);
+        tareaService = (TareaService) ServiceBuilder.create(TareaService.class);
+        idHito = getIntent().getStringExtra("EXTRA_ID_HITO");
+        idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
 
-        Button nuevoHitoBtn = (Button) findViewById(R.id.nuevo_hito);
-        nuevoHitoBtn.setOnClickListener(new View.OnClickListener() {
+        Button agregarBtn = (Button) findViewById(R.id.action_agregar);
+        agregarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ListaHitosActivity.this, CrearHitoActivity.class);
+                Intent i = new Intent(TareasHitoActivity.this, CrearTareaHitoActivity.class);
+                i.putExtra("EXTRA_ID_HITO", idHito);
                 i.putExtra("EXTRA_ID_PROYECTO", idProyecto);
                 startActivity(i);
             }
         });
 
-        UUID uuidProyecto = UUID.fromString(idProyecto);
-        ProyectoService service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
-        Call<List<Hito>> call = service.listarHitos(uuidProyecto);
+        Button quitarBtn = (Button) findViewById(R.id.action_quitar);
+        quitarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mAdapter != null && mAdapter.getTareasSeleccionadas() != null) {
+                    List<Integer> seleccionadas = mAdapter.getTareasSeleccionadas();
+                    System.err.println("Seleccionados : " + seleccionadas.size());
+                    for (int i = 0; i < seleccionadas.size(); i++) {
+                        Tarea tarea = tareas.get(seleccionadas.get(i));
+                        UUID id = tarea.getIdTarea();
+                        CrearTareaData datos = new CrearTareaData(tarea);
+                        tareaService.editar(id, datos);
+                        System.err.println("Seleccionados : " + tareas.get(seleccionadas.get(i)).getNombre());
+                    }
+                }
+            }
+        });
+
+        HitoService service = (HitoService) ServiceBuilder.create(HitoService.class);
+        UUID uuidHito = UUID.fromString(idHito);
+        Call<List<Tarea>> call = service.listarTareas(uuidHito);
         call.enqueue(this);
     }
 
     @Override
-    public void onResponse(Call<List<Hito>> call, Response<List<Hito>> response) {
+    public void onResponse(Call<List<Tarea>> call, Response<List<Tarea>> response) {
         System.err.println("Status code : " + response.code());
         if (response.isSuccessful()) {
-            List<Hito> hitos = response.body();
-            if (hitos.size() == 0) {
+            tareas = response.body();
+            if (tareas.size() == 0) {
                 sinDatos.setVisibility(View.VISIBLE);
             } else {
-                System.err.println("Hitos : " + hitos.size());
-                mAdapter = new HitosAdapter(hitos, ListaHitosActivity.this);
+                mAdapter = new TareasHitoAdapter(tareas, TareasHitoActivity.this);
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.setVisibility(View.VISIBLE);
             }
@@ -90,9 +114,8 @@ public class ListaHitosActivity extends AppCompatActivity implements Callback<Li
     }
 
     @Override
-    public void onFailure(Call<List<Hito>> call, Throwable t) {
+    public void onFailure(Call<List<Tarea>> call, Throwable t) {
         showProgress(false);
-        System.err.println("Error - listar hitos : " + t.getMessage());
         Toast.makeText(this, "Ocurrio un error al invocar al servicio : " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 

@@ -27,7 +27,7 @@ public interface TareaService {
     Call<ResponseBody> crear(@Body CrearTareaData tarea);
 
     @PUT(BASE_URL_API + "/tareas/{id}")
-    Call<ResponseBody> editar(@Path("id") UUID id, @Body Tarea datos);
+    Call<ResponseBody> editar(@Path("id") UUID id, @Body CrearTareaData datos);
 
     @DELETE(BASE_URL_API + "/tareas/{id}")
     Call<ResponseBody> eliminar(@Path("id") UUID id);

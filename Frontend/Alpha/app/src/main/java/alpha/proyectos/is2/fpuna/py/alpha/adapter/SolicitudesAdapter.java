@@ -14,13 +14,16 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import java.util.List;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
+import alpha.proyectos.is2.fpuna.py.alpha.activity.DatosSolicitudActivity;
 import alpha.proyectos.is2.fpuna.py.alpha.activity.EditarHitoActivity;
 import alpha.proyectos.is2.fpuna.py.alpha.activity.EditarTareaActivity;
+import alpha.proyectos.is2.fpuna.py.alpha.service.SolicitudesColaboracion;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
+import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
 
-public class HitosAdapter extends RecyclerView.Adapter<HitosAdapter.ViewHolder> {
+public class SolicitudesAdapter extends RecyclerView.Adapter<SolicitudesAdapter.ViewHolder> {
 
-    private List<Hito> mDataset;
+    private List<SolicitudesColaboracion> mDataset;
     private Activity mContext;
     
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -36,14 +39,14 @@ public class HitosAdapter extends RecyclerView.Adapter<HitosAdapter.ViewHolder> 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HitosAdapter(List<Hito> myDataset, Activity mContext) {
+    public SolicitudesAdapter(List<SolicitudesColaboracion> myDataset, Activity mContext) {
         mDataset = myDataset;
         this.mContext = mContext;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public HitosAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SolicitudesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lista_hitos, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -52,22 +55,18 @@ public class HitosAdapter extends RecyclerView.Adapter<HitosAdapter.ViewHolder> 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-		final Hito hito = mDataset.get(position);
-        holder.mTextView1.setText(hito.getNombre());
+		final SolicitudesColaboracion solicitud = mDataset.get(position);
+        Usuario usuario = solicitud.getUsuarioOrigen();
+        final String datosUsuario = usuario.getNombre() + " " + usuario.getApellido();
+        holder.mTextView1.setText(datosUsuario);
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, EditarHitoActivity.class);
-                System.err.println("Id hito : " + hito.getIdHito());
-                intent.putExtra("EXTRA_ID_HITO", hito.getIdHito().toString());
-                String idProyecto = hito.getProyecto().getIdProyecto().toString();
-                System.err.println("Id proyecto : " + idProyecto);
-                intent.putExtra("EXTRA_ID_PROYECTO", idProyecto);
-                intent.putExtra("EXTRA_NOMBRE", hito.getNombre());
-                intent.putExtra("EXTRA_DESCRIPCION", hito.getDescripcion());
-                intent.putExtra("EXTRA_FECHA_INICIO", hito.getFechaInicio());
-                intent.putExtra("EXTRA_FECHA_ESTIMADA_FIN", hito.getFechaEstimadaFin());
+                Intent intent = new Intent(mContext, DatosSolicitudActivity.class);
+                intent.putExtra("EXTRA_ID_SOLICITUD", solicitud.getIdSolicitudColaboracion().toString());
+                intent.putExtra("EXTRA_MENSAJE", solicitud.getMensaje());
+                intent.putExtra("EXTRA_DATOS_USUARIO", datosUsuario);
                 mContext.startActivity(intent);
             }
         });

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -17,10 +18,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,16 +55,19 @@ import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
  * Pantalla de creacion de hitos.
  * @author federico.torres
  */
-public class CrearHitoActivity extends AppCompatActivity
+public class EditarHitoActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener, Callback<ResponseBody> {
 
-	private Button cearHitoButton;
+	private Button guardarButton;
     private HitoService service;
-    private UsuarioService usuarioService;
     private UUID uuid;
     private final Activity mContext = this;
-    private String idProyecto;
     private PreferenceUtils preferenceUtils;
+
+    private String idHito;
+    private String idProyecto;
+    private String nombre;
+    private String descripcion;
 
     private EditText nombreView;
     private EditText descripcionView;
@@ -75,26 +81,50 @@ public class CrearHitoActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_crear_hito);
+        setContentView(R.layout.activity_editar_hito);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        preferenceUtils = new PreferenceUtils(EditarHitoActivity.this);
+        idHito = getIntent().getStringExtra("EXTRA_ID_HITO");
         idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
-        preferenceUtils = new PreferenceUtils(CrearHitoActivity.this);
+        System.err.println("Id hito : " + idHito);
+        System.err.println("Id proyecto : " + idProyecto);
+        nombre = getIntent().getStringExtra("EXTRA_NOMBRE");
+        descripcion = getIntent().getStringExtra("EXTRA_DESCRIPCION");
+        String fechaInicioString = getIntent().getStringExtra("EXTRA_FECHA_INICIO");
+        String fechaFinString = getIntent().getStringExtra("EXTRA_FECHA_ESTIMADA_FIN");
 
         nombreView = (EditText) findViewById(R.id.nombre);
         descripcionView = (EditText) findViewById(R.id.descripcion);
         fechaInicioView = (EditText) findViewById(R.id.fechaInicio);
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
 
-        service = (HitoService) ServiceBuilder.create(HitoService.class);
-        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
+        nombreView.setText(nombre);
+        descripcionView.setText(descripcion);
+        fechaInicioView.setText(fechaInicioString);
+        fechaFinView.setText(fechaFinString);
 
-        cearHitoButton = (Button) findViewById(R.id.button_guardar);
-        cearHitoButton.setOnClickListener(new OnClickListener() {
+        SimpleDateFormat sdf = new SimpleDateFormat(Constantes.FORMATO_FECHA_2);
+        try {
+            fechaInicio = sdf.parse(fechaInicioString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            fechaFin = sdf.parse(fechaFinString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        service = (HitoService) ServiceBuilder.create(HitoService.class);
+
+        guardarButton = (Button) findViewById(R.id.button_guardar);
+        guardarButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                cearHito();
+                guardarDatos();
             }
         });
 
@@ -105,6 +135,21 @@ public class CrearHitoActivity extends AppCompatActivity
                 finish();
             }
         });
+
+        View.OnClickListener verTareasListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(EditarHitoActivity.this, TareasHitoActivity.class);
+                i.putExtra("EXTRA_ID_HITO", idHito);
+                i.putExtra("EXTRA_ID_PROYECTO", idProyecto);
+                startActivity(i);
+            }
+        };
+
+        TextView verTareas = (TextView) findViewById(R.id.ver_tareas);
+        verTareas.setOnClickListener(verTareasListener);
+        ImageView linkTareas = (ImageView) findViewById(R.id.ver_tareas_link);
+        linkTareas.setOnClickListener(verTareasListener);
     }
 
     public void datePicker(View view) {
@@ -126,7 +171,7 @@ public class CrearHitoActivity extends AppCompatActivity
         }
     }
 
-    private void cearHito() {
+    private void guardarDatos() {
 
         boolean cancel = false;
         View focusView = null;
@@ -156,17 +201,16 @@ public class CrearHitoActivity extends AppCompatActivity
 
         if (cancel) {
             focusView.requestFocus();
-            cearHitoButton.setEnabled(true);
-            cearHitoButton.setText(R.string.action_guardar);
+            guardarButton.setEnabled(true);
+            guardarButton.setText(R.string.action_guardar);
         } else {
-            uuid = UUID.randomUUID();
+            UUID id = UUID.fromString(idHito);
             UUID uuidProyecto = UUID.fromString(idProyecto);
             Proyecto proyecto = new Proyecto(uuidProyecto);
             Usuario usuarioCreador = preferenceUtils.getUsuarioLogueado();
-            System.err.println("Error crear usuario : " + usuarioCreador);
-            CrearHito hito = new CrearHito(uuid, nombre, descripcion, fechaInicio.getTime(),
+            CrearHito hito = new CrearHito(id, nombre, descripcion, fechaInicio.getTime(),
                     fechaFin.getTime(), usuarioCreador, proyecto);
-            Call<ResponseBody> call = service.crear(hito);
+            Call<ResponseBody> call = service.editar(id, hito);
             call.enqueue(this);
         }
     }
@@ -174,7 +218,7 @@ public class CrearHitoActivity extends AppCompatActivity
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
-            showMessageSuccess("Exitoso", "Hito creado exitosamente");
+            showMessageSuccess("Exitoso", "Hito editado exitosamente");
         } else {
             ResponseBody body = response.errorBody();
             String json = slurp(body.byteStream(), 1024);

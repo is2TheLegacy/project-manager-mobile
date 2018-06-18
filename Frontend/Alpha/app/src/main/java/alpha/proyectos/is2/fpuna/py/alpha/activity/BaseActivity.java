@@ -68,7 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity
         SharedPreferences prefs = getSharedPreferences(Constantes.PROYECTOS_ALPHA_PREFS_NAME, 0);
 
         TextView nombre = (TextView) hView.findViewById(R.id.header_nombre);
-        nombre.setText(prefs.getString(Constantes.SESSION_NOMBRE, "") + " "+prefs.getString(Constantes.SESSION_APELLIDO, ""));
+        nombre.setText(preferenceUtils.getNombreUsuario() + " " + preferenceUtils.getApellidoUsuario());
         inint();
     }
 
@@ -169,7 +169,10 @@ public abstract class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_proyectos) {
             Intent i = new Intent(BaseActivity.this, ListaProyectoActivity.class);
             startActivity(i);
-        }
+        }/* else if (id == R.id.nav_solicitudes) {
+            Intent i = new Intent(BaseActivity.this, ListaProyectoActivity.class);
+            startActivity(i);
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -18,13 +18,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import alpha.proyectos.is2.fpuna.py.alpha.Constantes;
 import alpha.proyectos.is2.fpuna.py.alpha.R;
-import alpha.proyectos.is2.fpuna.py.alpha.adapter.ProyectoAdapter;
-import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
+import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
 import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,15 +43,16 @@ public class DashboardActivity extends BaseActivity {
     private LinearLayout sinProyectosContent2;
     private TextView sinProyectosText1;
     private TextView sinProyectosText2;
+    private PreferenceUtils preferenceUtils;
 
-    private ProyectoService service;
+    private UsuarioService service;
     public static boolean recargar = false;
 
     @Override
     protected void inint() {
         loadLayout(R.layout.activity_dashboard, "Dashboard");
 
-        PreferenceUtils preferenceUtils = new PreferenceUtils(DashboardActivity.this);
+        preferenceUtils = new PreferenceUtils(DashboardActivity.this);
         String tokenFirebase = preferenceUtils.getTokenFirebase();
         System.err.println("Token firebase : " + tokenFirebase);
 
@@ -70,7 +72,7 @@ public class DashboardActivity extends BaseActivity {
         sinProyectosContent2 = (LinearLayout) findViewById(R.id.sin_proyectos_content_2);
         sinProyectosText1 = (TextView) findViewById(R.id.sin_proyectos_text_1);
         sinProyectosText2 = (TextView) findViewById(R.id.sin_proyectos_text_2);
-        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        service = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
         cargarDatos();
 
     }
@@ -86,7 +88,10 @@ public class DashboardActivity extends BaseActivity {
 
     private void cargarDatos() {
 
-        Call<List<Proyecto>> call1 = service.listar();
+        Usuario usuario = preferenceUtils.getUsuarioLogueado();
+        String idUsuario = usuario.getIdUsuario();
+
+        Call<List<Proyecto>> call1 = service.getMisProyectos(idUsuario);
         call1.enqueue(new Callback<List<Proyecto>>() {
             @Override
             public void onResponse(Call<List<Proyecto>> call, Response<List<Proyecto>> response) {
@@ -107,7 +112,7 @@ public class DashboardActivity extends BaseActivity {
                         final StableArrayAdapter adapter = new StableArrayAdapter(DashboardActivity.this,
                                 R.layout.list_item, list);
 
-                        misProyectosCardView.setMinimumHeight(proyectos.size() * 70);
+                        misProyectosCardView.setMinimumHeight(proyectos.size() * 80);
                         ListView misProyectosListView = new ListView(DashboardActivity.this);
                         misProyectosListView.setMinimumHeight(proyectos.size() * 100);
                         misProyectosListView.setAdapter(adapter);
@@ -141,7 +146,7 @@ public class DashboardActivity extends BaseActivity {
             }
         });
 
-        Call<List<Proyecto>> call2 = service.listar();
+        Call<List<Proyecto>> call2 = service.getProyectosColaborando(idUsuario);
         call2.enqueue(new Callback<List<Proyecto>>() {
             @Override
             public void onResponse(Call<List<Proyecto>> call, Response<List<Proyecto>> response) {
@@ -162,7 +167,7 @@ public class DashboardActivity extends BaseActivity {
                         final StableArrayAdapter adapter = new StableArrayAdapter(DashboardActivity.this,
                                 R.layout.list_item, list);
 
-                        proyectosParticipandoCardView.setMinimumHeight(proyectos.size() * 70);
+                        proyectosParticipandoCardView.setMinimumHeight(proyectos.size() * 80);
                         ListView misProyectosListView = new ListView(DashboardActivity.this);
                         misProyectosListView.setMinimumHeight(proyectos.size() * 100);
                         misProyectosListView.setAdapter(adapter);

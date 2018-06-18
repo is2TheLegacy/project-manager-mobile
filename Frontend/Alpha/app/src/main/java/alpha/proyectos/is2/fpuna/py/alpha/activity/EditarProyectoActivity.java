@@ -47,6 +47,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
+
 public class EditarProyectoActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener, Callback<ResponseBody> {
 
@@ -136,7 +138,6 @@ public class EditarProyectoActivity extends AppCompatActivity
                     public void onNothingSelected(AdapterView<?> adapterView) {
                     }
                 });
-
 
             }
 
@@ -260,7 +261,8 @@ public class EditarProyectoActivity extends AppCompatActivity
             showMessageSuccess("Exitoso", "Proyecto editado exitosamente");
         } else {
             ResponseBody body = response.errorBody();
-            System.err.println("Error editar proyecto : " + response.code() + " - " + body.toString());
+            String json = slurp(body.byteStream(), 1024);
+            System.err.println("Error - editar proyecto : " + json);
             showMessage("Error", "Ocurrio un error al realizar la operación");
         }
     }

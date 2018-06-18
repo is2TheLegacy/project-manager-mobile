@@ -52,9 +52,12 @@
     <string name="ver_hitos">Hitos del Proyecto</string>
     <string name="title_activity_lista_hitos">Hitos del Proyecto</string>
     <string name="title_activity_crear_hito">Nuevo Hito</string>
+    <string name="title_activity_editar_hito">Editar Hito</string>
+    <string name="title_activity_tareas_hito">Tareas del Hito</string>
     <string name="title_activity_comentarios">Comentarios</string>
     <string name="title_activity_nuevo_comentario">Nuevo Comentario</string>
     <string name="prompt_agregar_Comentario">Agregar Comentario</string>
+    <string name="prompt_agregar_mensaje">Agregar Mensaje</string>
     <string name="action_modificar_datos">Modificar Datos</string>
     <string name="action_eliminar_proyecto">Eliminar Proyecto</string>
 

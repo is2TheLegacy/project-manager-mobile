@@ -22,9 +22,11 @@ import java.util.UUID;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.adapter.HitosAdapter;
+import alpha.proyectos.is2.fpuna.py.alpha.adapter.SolicitudesAdapter;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.HitoService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.SolicitudesColaboracion;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,17 +36,17 @@ import retrofit2.Response;
  * Pantalla de listado de Hitos
  * @author federico.torres
  */
-public class ListaHitosActivity extends AppCompatActivity implements Callback<List<Hito>> {
+public class SolicitudesActivity extends AppCompatActivity implements Callback<List<SolicitudesColaboracion>> {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private SolicitudesAdapter mAdapter;
     private ProgressBar progressBar;
     private LinearLayout sinDatos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_hitos);
+        setContentView(R.layout.activity_solicitudes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,32 +55,21 @@ public class ListaHitosActivity extends AppCompatActivity implements Callback<Li
         mRecyclerView = getRecyclerView(R.id.my_recycler_view);
         sinDatos = (LinearLayout) findViewById(R.id.sin_datos_content);
 
-        Button nuevoHitoBtn = (Button) findViewById(R.id.nuevo_hito);
-        nuevoHitoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ListaHitosActivity.this, CrearHitoActivity.class);
-                i.putExtra("EXTRA_ID_PROYECTO", idProyecto);
-                startActivity(i);
-            }
-        });
-
         UUID uuidProyecto = UUID.fromString(idProyecto);
         ProyectoService service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
-        Call<List<Hito>> call = service.listarHitos(uuidProyecto);
+        Call<List<SolicitudesColaboracion>> call = service.listarSolicitudes(uuidProyecto);
         call.enqueue(this);
     }
 
     @Override
-    public void onResponse(Call<List<Hito>> call, Response<List<Hito>> response) {
+    public void onResponse(Call<List<SolicitudesColaboracion>> call, Response<List<SolicitudesColaboracion>> response) {
         System.err.println("Status code : " + response.code());
         if (response.isSuccessful()) {
-            List<Hito> hitos = response.body();
-            if (hitos.size() == 0) {
+            List<SolicitudesColaboracion> solicitudes = response.body();
+            if (solicitudes.size() == 0) {
                 sinDatos.setVisibility(View.VISIBLE);
             } else {
-                System.err.println("Hitos : " + hitos.size());
-                mAdapter = new HitosAdapter(hitos, ListaHitosActivity.this);
+                mAdapter = new SolicitudesAdapter(solicitudes, SolicitudesActivity.this);
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.setVisibility(View.VISIBLE);
             }
@@ -90,7 +81,7 @@ public class ListaHitosActivity extends AppCompatActivity implements Callback<Li
     }
 
     @Override
-    public void onFailure(Call<List<Hito>> call, Throwable t) {
+    public void onFailure(Call<List<SolicitudesColaboracion>> call, Throwable t) {
         showProgress(false);
         System.err.println("Error - listar hitos : " + t.getMessage());
         Toast.makeText(this, "Ocurrio un error al invocar al servicio : " + t.getMessage(), Toast.LENGTH_SHORT).show();

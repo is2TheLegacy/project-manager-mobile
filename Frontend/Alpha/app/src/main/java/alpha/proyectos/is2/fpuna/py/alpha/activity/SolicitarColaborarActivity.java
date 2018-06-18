@@ -1,0 +1,164 @@
+package alpha.proyectos.is2.fpuna.py.alpha.activity;
+
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.support.v4.app.DialogFragment;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.UUID;
+
+import alpha.proyectos.is2.fpuna.py.alpha.R;
+import alpha.proyectos.is2.fpuna.py.alpha.service.SolicitudesColaboracion;
+import alpha.proyectos.is2.fpuna.py.alpha.service.TareaService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Comentario;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
+import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
+import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
+
+
+/**
+ * Pantalla para agregar comentarios a una tarea.
+ * @author federico.torres
+ */
+public class SolicitarColaborarActivity extends AppCompatActivity implements Callback<ResponseBody> {
+
+	private Button crearButton;
+    private ProyectoService service;
+    private UUID uuid;
+    private PreferenceUtils preferenceUtils;
+    private EditText contenidoView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_solicitar_colaborar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        preferenceUtils = new PreferenceUtils(SolicitarColaborarActivity.this);
+        final String idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
+        final String idPropietario = getIntent().getStringExtra("EXTRA_ID_PROPIETARIO");
+
+        contenidoView = (EditText) findViewById(R.id.contenido);
+        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+
+        crearButton = (Button) findViewById(R.id.button_guardar);
+        crearButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                solicitar(idProyecto, idPropietario);
+            }
+        });
+
+        Button cancelarCuentaButton = (Button) findViewById(R.id.button_cancelar);
+        cancelarCuentaButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+    private void solicitar(String idProyecto, String idPropietario) {
+
+        boolean cancel = false;
+        View focusView = null;
+
+        String contenido = contenidoView.getText().toString();
+
+        if (TextUtils.isEmpty(contenido)) {
+            contenidoView.setError(getString(R.string.error_field_required));
+            focusView = contenidoView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+            crearButton.setEnabled(true);
+            crearButton.setText(R.string.action_guardar);
+        } else {
+            uuid = UUID.randomUUID();
+            UUID uuidProyecto = UUID.fromString(idProyecto);
+            Proyecto proyecto = new Proyecto(uuidProyecto);
+            //UUID uuidUsuario = UUID.fromString(idPropietario);
+            Usuario usuarioDestino = new Usuario(idPropietario);
+            Usuario usuarioOrigen = preferenceUtils.getUsuarioLogueado();
+            SolicitudesColaboracion datos = new SolicitudesColaboracion(uuid, proyecto, usuarioOrigen, usuarioDestino, contenido);
+            Call<ResponseBody> call = service.crearSolicitud(datos);
+            call.enqueue(this);
+        }
+    }
+
+    @Override
+    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        if (response.isSuccessful()) {
+            showMessageSuccess("Exitoso", "Solicitud enviada exitosamente");
+        } else {
+            ResponseBody body = response.errorBody();
+            String json = slurp(body.byteStream(), 1024);
+            System.err.println("Error crear solicitud : " + json);
+            showMessage("Error", "Ocurrio un error al realizar la operación");
+        }
+    }
+
+    @Override
+    public void onFailure(Call<ResponseBody> call, Throwable t) {
+        ;
+    }
+
+    private void showMessageSuccess(String titulo, String mensaje) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(mensaje).setTitle(titulo);
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showMessage(String titulo, String mensaje) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(mensaje).setTitle(titulo);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+}

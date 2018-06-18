@@ -38,10 +38,13 @@ import java.util.UUID;
 
 import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.service.CrearTareaData;
+import alpha.proyectos.is2.fpuna.py.alpha.service.HitoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.TareaService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.CategoriaProyecto;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
@@ -62,6 +65,8 @@ public class EditarTareaActivity extends AppCompatActivity
 
 	private Button guardarTareaButton;
     private TareaService service;
+    private HitoService hitoService;
+    private ProyectoService proyectoService;
     private UUID uuid;
     private final Activity mContext = this;
 
@@ -71,6 +76,7 @@ public class EditarTareaActivity extends AppCompatActivity
     private EditText fechaFinView;
 
     private String idTarea;
+    private String idProyecto;
     private String nombre;
     private String descripcion;
     private String estadoActual;
@@ -82,6 +88,7 @@ public class EditarTareaActivity extends AppCompatActivity
     private Proyecto proyecto;
     private String estado;
     private short porcentaje;
+    private Hito hito;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +104,8 @@ public class EditarTareaActivity extends AppCompatActivity
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
 
         idTarea = getIntent().getStringExtra("EXTRA_ID_TAREA");
+        idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
+        final String idHito = getIntent().getStringExtra("EXTRA_ID_HITO");
         nombre = getIntent().getStringExtra("EXTRA_NOMBRE");
         estadoActual = getIntent().getStringExtra("EXTRA_ESTADO");
         descripcion = getIntent().getStringExtra("EXTRA_DESCRIPCION");
@@ -106,7 +115,10 @@ public class EditarTareaActivity extends AppCompatActivity
         descripcionView.setText(descripcion);
 
         service = (TareaService) ServiceBuilder.create(TareaService.class);
+        hitoService = (HitoService) ServiceBuilder.create(HitoService.class);
+        proyectoService = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
 
+        // Estados
         final List<String> estados = new ArrayList<String>();
         estados.add("ABIERTA");
         estados.add("PENDIENTE");
@@ -130,6 +142,7 @@ public class EditarTareaActivity extends AppCompatActivity
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
 
+        // Porcentaje
         final List<String> porcentajes = new ArrayList<String>();
         porcentajes.add("0 %");
         porcentajes.add("10 %");
@@ -161,6 +174,48 @@ public class EditarTareaActivity extends AppCompatActivity
                 android.R.layout.simple_spinner_item, porcentajes);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPorcentaje.setAdapter(dataAdapterPorcentaje);
+
+        // Hitos
+        final List<String> listaHitos = new ArrayList<>();
+
+        UUID uuidProyecto = UUID.fromString(idProyecto);
+        proyectoService.listarHitos(uuidProyecto).enqueue(new Callback<List<Hito>>() {
+            @Override
+            public void onResponse(Call<List<Hito>> call, Response<List<Hito>> response) {
+                final List<Hito> hitos = response.body();
+                int index = 0;
+                int actual = 0;
+                for (Hito hito : hitos) {
+                    listaHitos.add(hito.getNombre());
+                    if (idHito != null && hito.getIdHito().toString().equals(idHito)) {
+                        actual = index;
+                    }
+                    index++;
+                }
+
+                Spinner hitoSpinner = (Spinner) findViewById(R.id.hito_spinner);
+                ArrayAdapter<String> hitoDataAdapter = new ArrayAdapter<String>(EditarTareaActivity.this,
+                        android.R.layout.simple_spinner_item, listaHitos);
+                hitoDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                hitoSpinner.setAdapter(hitoDataAdapter);
+                hitoSpinner.setSelection(actual);
+                hitoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        hito = hitos.get(i);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<Hito>> call, Throwable t) {
+                ;
+            }
+        });
 
         OnClickListener verComentariosListener = new OnClickListener() {
             @Override
@@ -251,7 +306,7 @@ public class EditarTareaActivity extends AppCompatActivity
         } else {
             System.err.println("Id tarea : " + idTarea);
             UUID id = UUID.fromString(idTarea);
-            Tarea tarea = new Tarea(id, nombre, descripcion, fechaInicio, fechaFin, estado);
+            CrearTareaData tarea = new CrearTareaData(id, fechaInicio.getTime(), fechaFin.getTime(), estado, porcentaje, hito);
             Call<ResponseBody> call = service.editar(id, tarea);
             call.enqueue(this);
         }

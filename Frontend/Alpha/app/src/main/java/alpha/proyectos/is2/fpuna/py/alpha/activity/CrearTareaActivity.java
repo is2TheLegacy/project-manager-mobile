@@ -43,6 +43,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,6 +65,7 @@ public class CrearTareaActivity extends AppCompatActivity
     private ProyectoService proyectoService;
     private UUID uuid;
     private final Activity mContext = this;
+    private PreferenceUtils preferenceUtils;
 
     private EditText nombreView;
     private EditText descripcionView;
@@ -84,6 +86,7 @@ public class CrearTareaActivity extends AppCompatActivity
         setContentView(R.layout.activity_crear_tarea);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        preferenceUtils = new PreferenceUtils(CrearTareaActivity.this);
 
         nombreView = (EditText) findViewById(R.id.nombre);
         descripcionView = (EditText) findViewById(R.id.descripcion);
@@ -252,8 +255,9 @@ public class CrearTareaActivity extends AppCompatActivity
             cearTareaButton.setText(R.string.action_guardar);
         } else {
             uuid = UUID.randomUUID();
+            Usuario usuarioCreador = preferenceUtils.getUsuarioLogueado();
             CrearTareaData tarea = new CrearTareaData(uuid, nombre, descripcion,
-                    fechaInicio, fechaFin, prioridad, usuarioAsignado, proyecto);
+                    fechaInicio, fechaFin, prioridad, usuarioAsignado, proyecto, null, usuarioCreador);
             Call<ResponseBody> call = service.crear(tarea);
             call.enqueue(this);
         }

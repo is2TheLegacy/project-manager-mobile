@@ -111,7 +111,12 @@ public class DatosProyectoActivity extends AppCompatActivity {
             }
         };
 
-        View.OnClickListener verTareasListener = new View.OnClickListener() {
+        TextView verHitos = (TextView) findViewById(R.id.ver_hitos);
+        verHitos.setOnClickListener(verHitosListener);
+        ImageView linkHitos = (ImageView) findViewById(R.id.ver_hitos_link);
+        linkHitos.setOnClickListener(verHitosListener);
+
+        /*View.OnClickListener verTareasListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(DatosProyectoActivity.this, ListaTareasActivity.class);
@@ -119,16 +124,24 @@ public class DatosProyectoActivity extends AppCompatActivity {
                 startActivity(i);
             }
         };
-
-        TextView verHitos = (TextView) findViewById(R.id.ver_hitos);
-        verHitos.setOnClickListener(verHitosListener);
-        ImageView linkHitos = (ImageView) findViewById(R.id.ver_hitos_link);
-        linkHitos.setOnClickListener(verHitosListener);
-
         TextView verTareas = (TextView) findViewById(R.id.ver_tareas);
         verTareas.setOnClickListener(verTareasListener);
         ImageView linkTareas = (ImageView) findViewById(R.id.ver_tareas_link);
-        linkTareas.setOnClickListener(verTareasListener);
+        linkTareas.setOnClickListener(verTareasListener);*/
+
+        View.OnClickListener verSolicitudesListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DatosProyectoActivity.this, SolicitudesActivity.class);
+                i.putExtra("EXTRA_ID_PROYECTO", idProyecto);
+                startActivity(i);
+            }
+        };
+
+        TextView verSolicitudes = (TextView) findViewById(R.id.ver_solicitudes);
+        verSolicitudes.setOnClickListener(verSolicitudesListener);
+        ImageView linkSolicitudes = (ImageView) findViewById(R.id.ver_solicitudes_link);
+        linkSolicitudes.setOnClickListener(verSolicitudesListener);
 
     }
 

@@ -18,6 +18,10 @@ public class Hito {
 	public Hito() {
 	}
 
+    public Hito(UUID id) {
+	    this.idHito = id;
+    }
+
     public Hito(UUID id, String nombre, String descripcion, String fechaInicio,
                 String fechaEstimadaFin, Usuario usuarioCreador, Proyecto proyecto) {
         this.idHito = id;

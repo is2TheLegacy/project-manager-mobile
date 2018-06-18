@@ -3,7 +3,9 @@ package alpha.proyectos.is2.fpuna.py.alpha.service;
 import java.util.Date;
 import java.util.UUID;
 
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
+import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
 
 public class CrearTareaData {
@@ -13,21 +15,36 @@ public class CrearTareaData {
     private String descripcion;
     private String prioridad;
     private String estado;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private Long fechaInicio;
+    private Long fechaFin;
     private Long fechaEstimadaInicio;
     private Long fechaEstimadaFin;
     private short porcentajeRealizado;
     private Usuario usuarioAsignado;
     private Usuario usuarioCreador;
     private Proyecto proyecto;
+    private Hito hito;
 
     public CrearTareaData() {
     }
 
+    public CrearTareaData(Tarea tarea) {
+        this.idTarea = tarea.getIdTarea();
+        this.nombre = tarea.getNombre();
+        this.descripcion = tarea.getDescripcion();
+        this.fechaEstimadaInicio = tarea.getFechaEstimadaInicio().getTime();
+        this.fechaEstimadaFin = tarea.getFechaEstimadaFin().getTime();
+        this.prioridad = tarea.getPrioridad();
+        this.usuarioAsignado = tarea.getUsuarioAsignado();
+        this.estado = tarea.getEstado();
+        this.prioridad = tarea.getPrioridad();
+        this.proyecto = tarea.getProyecto();
+        this.usuarioCreador = tarea.getUsuarioCreador();
+    }
+
     public CrearTareaData(UUID id, String nombre, String descripcion, Date fechaEstimadaInicio,
                           Date fechaEstimadaFin, String prioridad, Usuario usuarioAsignado,
-                          Proyecto proyecto) {
+                          Proyecto proyecto, Hito hito, Usuario usuarioCreador) {
 
         this.idTarea = id;
         this.nombre = nombre;
@@ -36,10 +53,22 @@ public class CrearTareaData {
         this.fechaEstimadaFin = fechaEstimadaFin.getTime();
         this.prioridad = prioridad;
         this.usuarioAsignado = usuarioAsignado;
-        this.usuarioCreador = usuarioAsignado;
         this.estado = "PENDIENTE";
         this.proyecto = proyecto;
         this.porcentajeRealizado = 0;
+        this.hito = hito;
+        this.usuarioCreador = usuarioCreador;
+    }
+
+    public CrearTareaData(UUID id, Long fechaInicio, Long fechaFin,
+                          String estado, Short porcentaje, Hito hito) {
+
+        this.idTarea = id;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.estado = estado;
+        this.porcentajeRealizado = porcentaje;
+        this.hito = hito;
     }
 
     public UUID getIdTarea() {
@@ -98,19 +127,19 @@ public class CrearTareaData {
         this.estado = estado;
     }
 
-    public Date getFechaInicio() {
+    public Long getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(Long fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public Long getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(Long fechaFin) {
         this.fechaFin = fechaFin;
     }
 
@@ -138,4 +167,19 @@ public class CrearTareaData {
         this.proyecto = proyecto;
     }
 
+    public Usuario getUsuarioCreador() {
+        return usuarioCreador;
+    }
+
+    public void setUsuarioCreador(Usuario usuarioCreador) {
+        this.usuarioCreador = usuarioCreador;
+    }
+
+    public Hito getHito() {
+        return hito;
+    }
+
+    public void setHito(Hito hito) {
+        this.hito = hito;
+    }
 }

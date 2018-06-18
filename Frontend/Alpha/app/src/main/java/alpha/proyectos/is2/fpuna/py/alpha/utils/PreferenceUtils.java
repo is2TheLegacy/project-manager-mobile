@@ -52,12 +52,30 @@ public class PreferenceUtils {
         editor.commit();
     }
 
+    public void guardarDatosUsuario(String idUsuario, String nombre, String apellido, String authToken) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString(Constantes.SESSION_ID_USUARIO, idUsuario);
+        editor.putString(Constantes.SESSION_NOMBRE, nombre);
+        editor.putString(Constantes.SESSION_APELLIDO, apellido);
+        editor.putString(Constantes.SESSION_AUTH_TOKEN, authToken);
+        editor.commit();
+    }
+
     public Usuario getUsuarioLogueado() {
         String idUsuario = getPreferences().getString(Constantes.SESSION_ID_USUARIO, null);
+        System.err.println("getUsuarioLogueado : " + idUsuario);
         if (idUsuario != null) {
             return new Usuario(idUsuario);
         }
         return null;
+    }
+
+    public String getNombreUsuario() {
+        return getPreferences().getString(Constantes.SESSION_NOMBRE, "");
+    }
+
+    public String getApellidoUsuario() {
+        return getPreferences().getString(Constantes.SESSION_APELLIDO, "");
     }
 
     public String getTokenFirebase() {
