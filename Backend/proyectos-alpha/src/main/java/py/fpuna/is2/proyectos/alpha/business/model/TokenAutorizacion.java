@@ -34,7 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TokenAutorizacion.findAll", query = "SELECT t FROM TokenAutorizacion t")
     , @NamedQuery(name = "TokenAutorizacion.findByExpirado", query = "SELECT t FROM TokenAutorizacion t WHERE t.expirado = :expirado")
     , @NamedQuery(name = "TokenAutorizacion.findByFechaCreacion", query = "SELECT t FROM TokenAutorizacion t WHERE t.fechaCreacion = :fechaCreacion")
-    , @NamedQuery(name = "TokenAutorizacion.findActiveSessionsOfUser", query = "SELECT t FROM TokenAutorizacion t WHERE t.expirado = FALSE and t.usuario.idUsuario = :idUsuario")})
+    , @NamedQuery(name = "TokenAutorizacion.findActiveSessionsOfUser", query = "SELECT t FROM TokenAutorizacion t WHERE t.expirado = FALSE and t.usuario.idUsuario = :idUsuario")
+    , @NamedQuery(name = "TokenAutorizacion.findActiveToken", query = "SELECT t FROM TokenAutorizacion t WHERE t.expirado = FALSE and t.token = :token")})
 public class TokenAutorizacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
