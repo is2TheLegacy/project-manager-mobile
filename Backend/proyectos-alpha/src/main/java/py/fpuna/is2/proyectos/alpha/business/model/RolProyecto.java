@@ -37,6 +37,10 @@ import javax.xml.bind.annotation.XmlTransient;
 public class RolProyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    public static final Short ADMINISTRADOR = 1;
+    public static final Short COLABORADOR = 2;
+    public static final Short SEGUIDOR = 3;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

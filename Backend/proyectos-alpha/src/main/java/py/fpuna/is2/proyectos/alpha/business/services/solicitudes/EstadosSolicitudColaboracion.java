@@ -3,19 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package py.fpuna.is2.proyectos.alpha.business.services.proyectos;
+package py.fpuna.is2.proyectos.alpha.business.services.solicitudes;
 
 /**
  *
  * @author rafae
  */
-public final class EstadosProyecto {
-    public static String ACTIVO = "ACTIVO";
-    public static String INACTIVO = "INACTIVO";
-    public static String CULMINADO = "CULMINADO";
-    public static String EN_CURSO = "EN CURSO";
-    public static String PAUSADO = "PAUSADO";
+public final class EstadosSolicitudColaboracion {
+    public static String PENDIENTE = "PENDIENTE";
+    public static String ACEPTADO = "ACEPTADO";
+    public static String RECHAZADO = "RECHAZADO";
 
-    private EstadosProyecto(){
+    private EstadosSolicitudColaboracion(){
     }
 }

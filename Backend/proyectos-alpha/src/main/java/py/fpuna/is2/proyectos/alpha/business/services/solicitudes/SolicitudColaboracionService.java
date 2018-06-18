@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package py.fpuna.is2.proyectos.alpha.business.services.proyectos;
+package py.fpuna.is2.proyectos.alpha.business.services.solicitudes;
 
 import java.util.Date;
 import java.util.List;
@@ -12,17 +12,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import py.fpuna.is2.proyectos.alpha.business.model.Hito;
-import py.fpuna.is2.proyectos.alpha.business.model.Proyecto;
+import py.fpuna.is2.proyectos.alpha.business.model.SolicitudColaboracion;
 import py.fpuna.is2.proyectos.alpha.business.services.AbstractFacade;
 
 /**
@@ -30,80 +21,46 @@ import py.fpuna.is2.proyectos.alpha.business.services.AbstractFacade;
  * @author rafae
  */
 @Stateless
-@Path("proyectos")
-@Consumes("application/json")
-@Produces("application/json")
-public class ProyectoService extends AbstractFacade<Proyecto>{
+public class SolicitudColaboracionService extends AbstractFacade<SolicitudColaboracion>{
     
     @PersistenceContext(unitName = "py.fpuna.is2_proyectos-alpha_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
-    public ProyectoService() {
-        super(Proyecto.class);
+    public SolicitudColaboracionService() {
+        super(SolicitudColaboracion.class);
     }
     
-    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
     
-    @POST
-    @Override
-    public void create(Proyecto entity) {
+    public void create(SolicitudColaboracion entity) {
         if(entity!=null) {
-            entity.setFechaCreacion(new Date());
-            entity.setEstado(EstadosProyecto.ACTIVO);
+            entity.setFechaSolitud(new Date());
+            entity.setEstado(EstadosSolicitudColaboracion.PENDIENTE);
         }
         super.create(entity);
     }
-
-    @PUT
-    @Path("{id}")
-    public void edit(@PathParam("id") UUID id, Proyecto entity) { 
+    
+    public void edit(UUID id, SolicitudColaboracion entity) { 
         if(id != null && entity != null) {
-            entity.setIdProyecto(id);
+            entity.setIdSolicitudColaboracion(id);
             super.edit(entity);
         }
     }
-
-    @DELETE
-    @Path("{id}")
-    public void remove(@PathParam("id") UUID id) {
+    
+    public void remove(UUID id) {
         super.remove(super.find(id));
     }
-
-    @GET
-    @Path("{id}")
-    public Proyecto find(@PathParam("id") UUID id) {
+    
+    public SolicitudColaboracion find(UUID id) {
         return super.find(id);
     }
-
-    @GET
-    @Override
-    public List<Proyecto> findAll() {
-        return super.findAll();
-    }
-
-    @GET
-    @Path("{from}/{to}")
-    public List<Proyecto> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
-    }
-
-    @GET
-    @Path("count")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String countREST() {
-        return String.valueOf(super.count());
-    }
     
-    
-    
-    @GET
-    @Path("{idProyecto}/hitos")
-    public List<Hito> getAllMilestonesOfProject(@PathParam("idProyecto")UUID idProyecto) {
-        Query q = em.createNamedQuery("Hito.findByProyecto", Hito.class);
+    public List<SolicitudColaboracion> getAllPendingColaborationRequests(UUID idProyecto) {
+        Query q = em.createNamedQuery("SolicitudColaboracion.findByProyecto", SolicitudColaboracion.class);
         q.setParameter("idProyecto", idProyecto);
+        q.setParameter("estado", EstadosSolicitudColaboracion.PENDIENTE);
         return q.getResultList();
     }
 }

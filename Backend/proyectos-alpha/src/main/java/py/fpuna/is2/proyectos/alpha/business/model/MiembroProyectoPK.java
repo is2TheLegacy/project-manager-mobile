@@ -6,11 +6,15 @@
 package py.fpuna.is2.proyectos.alpha.business.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.Type;
 
 /**
  *
@@ -18,67 +22,59 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class MiembroProyectoPK implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "proyecto")
-    private UUID proyecto;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "usuario")
-    private UUID usuario;
+    
+    @JoinColumn(name = "proyecto", referencedColumnName = "id_proyecto")
+    @ManyToOne(optional = false)
+    private Proyecto proyecto;
+    @JoinColumn(name = "usuario",referencedColumnName = "id_usuario")
+    @ManyToOne(optional = false)
+    private Usuario usuario;
 
     public MiembroProyectoPK() {
     }
 
-    public MiembroProyectoPK(UUID proyecto, UUID usuario) {
-        this.proyecto = proyecto;
-        this.usuario = usuario;
-    }
-
-    public UUID getProyecto() {
+    public Proyecto getProyecto() {
         return proyecto;
     }
 
-    public void setProyecto(UUID proyecto) {
+    public void setProyecto(Proyecto proyecto) {
         this.proyecto = proyecto;
     }
 
-    public UUID getUsuario() {
+    public Usuario getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(UUID usuario) {
+    public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (proyecto != null ? proyecto.hashCode() : 0);
-        hash += (usuario != null ? usuario.hashCode() : 0);
+        int hash = 3;
+        hash = 11 * hash + Objects.hashCode(this.proyecto);
+        hash = 11 * hash + Objects.hashCode(this.usuario);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MiembroProyectoPK)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        MiembroProyectoPK other = (MiembroProyectoPK) object;
-        if ((this.proyecto == null && other.proyecto != null) || (this.proyecto != null && !this.proyecto.equals(other.proyecto))) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
-        if ((this.usuario == null && other.usuario != null) || (this.usuario != null && !this.usuario.equals(other.usuario))) {
+        final MiembroProyectoPK other = (MiembroProyectoPK) obj;
+        if (!Objects.equals(this.proyecto, other.proyecto)) {
+            return false;
+        }
+        if (!Objects.equals(this.usuario, other.usuario)) {
             return false;
         }
         return true;
     }
-
-    @Override
-    public String toString() {
-        return "py.fpuna.is2.proyectos.alpha.model.MiembroProyectoPK[ proyecto=" + proyecto + ", usuario=" + usuario + " ]";
-    }
-    
 }

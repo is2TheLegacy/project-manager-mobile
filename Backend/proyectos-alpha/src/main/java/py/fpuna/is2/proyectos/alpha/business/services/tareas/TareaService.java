@@ -68,7 +68,7 @@ public class TareaService extends AbstractFacade<Tarea> {
             }
             
             if(entity.getUsuarioAsignado() != null) {
-                NotificationEvent notificationEvt = new NotificationEvent();
+               /* NotificationEvent notificationEvt = new NotificationEvent();
                 notificationEvt.setSessionToken(token);
                 
                 Notification notificacion = new Notification();
@@ -77,7 +77,7 @@ public class TareaService extends AbstractFacade<Tarea> {
                 notificacion.setSound("default");
                 notificationEvt.setNotification(notificacion);
                 
-                events.fire(notificationEvt);
+                events.fire(notificationEvt);*/
             
             }
         }

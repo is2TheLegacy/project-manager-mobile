@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "SolicitudColaboracion.findAll", query = "SELECT s FROM SolicitudColaboracion s")
     , @NamedQuery(name = "SolicitudColaboracion.findByFechaSolitud", query = "SELECT s FROM SolicitudColaboracion s WHERE s.fechaSolitud = :fechaSolitud")
     , @NamedQuery(name = "SolicitudColaboracion.findByEstado", query = "SELECT s FROM SolicitudColaboracion s WHERE s.estado = :estado")
-    , @NamedQuery(name = "SolicitudColaboracion.findByMensaje", query = "SELECT s FROM SolicitudColaboracion s WHERE s.mensaje = :mensaje")})
+    , @NamedQuery(name = "SolicitudColaboracion.findByMensaje", query = "SELECT s FROM SolicitudColaboracion s WHERE s.mensaje = :mensaje")
+    , @NamedQuery(name = "SolicitudColaboracion.findByProyecto", query = "SELECT s FROM SolicitudColaboracion s WHERE s.proyecto.idProyecto = :idProyecto AND s.estado = :estado")})
 public class SolicitudColaboracion implements Serializable {
 
     private static final long serialVersionUID = 1L;

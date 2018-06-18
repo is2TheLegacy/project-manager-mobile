@@ -9,13 +9,10 @@ package py.fpuna.is2.proyectos.alpha.business.services.proyectos;
  *
  * @author rafae
  */
-public final class EstadosProyecto {
+public final class EstadosMembresia {
     public static String ACTIVO = "ACTIVO";
     public static String INACTIVO = "INACTIVO";
-    public static String CULMINADO = "CULMINADO";
-    public static String EN_CURSO = "EN CURSO";
-    public static String PAUSADO = "PAUSADO";
 
-    private EstadosProyecto(){
+    private EstadosMembresia(){
     }
 }

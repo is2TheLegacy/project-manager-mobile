@@ -104,8 +104,6 @@ public class Usuario implements Serializable {
     private Collection<SolicitudColaboracion> solicitudColaboracionCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioDestino")
     private Collection<SolicitudColaboracion> solicitudColaboracionCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario1")
-    private Collection<MiembroProyecto> miembroProyectoCollection;
 
     public Usuario() {
     }
@@ -265,15 +263,6 @@ public class Usuario implements Serializable {
 
     public void setSolicitudColaboracionCollection1(Collection<SolicitudColaboracion> solicitudColaboracionCollection1) {
         this.solicitudColaboracionCollection1 = solicitudColaboracionCollection1;
-    }
-
-    @XmlTransient
-    public Collection<MiembroProyecto> getMiembroProyectoCollection() {
-        return miembroProyectoCollection;
-    }
-
-    public void setMiembroProyectoCollection(Collection<MiembroProyecto> miembroProyectoCollection) {
-        this.miembroProyectoCollection = miembroProyectoCollection;
     }
 
     @Override

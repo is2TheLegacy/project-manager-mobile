@@ -44,7 +44,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Proyecto.findByUrImagenPortada", query = "SELECT p FROM Proyecto p WHERE p.urImagenPortada = :urImagenPortada")
     , @NamedQuery(name = "Proyecto.findByFechaCreacion", query = "SELECT p FROM Proyecto p WHERE p.fechaCreacion = :fechaCreacion")
     , @NamedQuery(name = "Proyecto.findByFechaFinalizacion", query = "SELECT p FROM Proyecto p WHERE p.fechaFinalizacion = :fechaFinalizacion")
-    , @NamedQuery(name = "Proyecto.findByEstado", query = "SELECT p FROM Proyecto p WHERE p.estado = :estado")})
+    , @NamedQuery(name = "Proyecto.findByEstado", query = "SELECT p FROM Proyecto p WHERE p.estado = :estado")
+    , @NamedQuery(name = "Proyecto.findByPropietario", query = "SELECT p FROM Proyecto p WHERE p.propietario.idUsuario = :idUsuario")})
 public class Proyecto implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto")
@@ -88,15 +89,6 @@ public class Proyecto implements Serializable {
     @JoinColumn(name = "propietario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario propietario;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto", fetch = FetchType.EAGER)
-    private Collection<Hito> hitoCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto")
-    @JsonIgnore
-    private Collection<SolicitudColaboracion> solicitudColaboracionCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto1")
-    @JsonIgnore
-    private Collection<MiembroProyecto> miembroProyectoCollection;
 
     public Proyecto() {
     }
@@ -183,33 +175,6 @@ public class Proyecto implements Serializable {
 
     public void setPropietario(Usuario propietario) {
         this.propietario = propietario;
-    }
-
-    @XmlTransient
-    public Collection<Hito> getHitoCollection() {
-        return hitoCollection;
-    }
-
-    public void setHitoCollection(Collection<Hito> hitoCollection) {
-        this.hitoCollection = hitoCollection;
-    }
-
-    @XmlTransient
-    public Collection<SolicitudColaboracion> getSolicitudColaboracionCollection() {
-        return solicitudColaboracionCollection;
-    }
-
-    public void setSolicitudColaboracionCollection(Collection<SolicitudColaboracion> solicitudColaboracionCollection) {
-        this.solicitudColaboracionCollection = solicitudColaboracionCollection;
-    }
-
-    @XmlTransient
-    public Collection<MiembroProyecto> getMiembroProyectoCollection() {
-        return miembroProyectoCollection;
-    }
-
-    public void setMiembroProyectoCollection(Collection<MiembroProyecto> miembroProyectoCollection) {
-        this.miembroProyectoCollection = miembroProyectoCollection;
     }
 
     @Override

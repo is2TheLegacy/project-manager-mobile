@@ -33,12 +33,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "MiembroProyecto.findAll", query = "SELECT m FROM MiembroProyecto m")
     , @NamedQuery(name = "MiembroProyecto.findByFechaMembresia", query = "SELECT m FROM MiembroProyecto m WHERE m.fechaMembresia = :fechaMembresia")
-    , @NamedQuery(name = "MiembroProyecto.findByEstado", query = "SELECT m FROM MiembroProyecto m WHERE m.estado = :estado")})
+    , @NamedQuery(name = "MiembroProyecto.findByEstado", query = "SELECT m FROM MiembroProyecto m WHERE m.estado = :estado")
+    , @NamedQuery(name = "MiembroProyecto.findByUsuario", query = "SELECT m FROM MiembroProyecto m WHERE m.membresia.usuario.idUsuario = :idUsuario and m.estado = :estado")})
 public class MiembroProyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected MiembroProyectoPK miembroProyectoPK;
+    protected MiembroProyectoPK membresia;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_membresia")
@@ -48,40 +49,30 @@ public class MiembroProyecto implements Serializable {
     @NotNull
     @Size(min = 1, max = 10)
     @Column(name = "estado")
-    private String estado;
-    @JoinColumn(name = "proyecto", referencedColumnName = "id_proyecto", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Proyecto proyecto1;
+    private String estado;    
     @JoinColumn(name = "rol", referencedColumnName = "id_rol_proyecto")
     @ManyToOne(optional = false)
     private RolProyecto rol;
-    @JoinColumn(name = "usuario", referencedColumnName = "id_usuario", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Usuario usuario1;
 
     public MiembroProyecto() {
     }
 
-    public MiembroProyecto(MiembroProyectoPK miembroProyectoPK) {
-        this.miembroProyectoPK = miembroProyectoPK;
+    public MiembroProyecto(MiembroProyectoPK membresia) {
+        this.membresia = membresia;
     }
 
-    public MiembroProyecto(MiembroProyectoPK miembroProyectoPK, Date fechaMembresia, String estado) {
-        this.miembroProyectoPK = miembroProyectoPK;
+    public MiembroProyecto(MiembroProyectoPK membresia, Date fechaMembresia, String estado) {
+        this.membresia = membresia;
         this.fechaMembresia = fechaMembresia;
         this.estado = estado;
     }
 
-    public MiembroProyecto(UUID proyecto, UUID usuario) {
-        this.miembroProyectoPK = new MiembroProyectoPK(proyecto, usuario);
+    public MiembroProyectoPK getMembresia() {
+        return membresia;
     }
 
-    public MiembroProyectoPK getMiembroProyectoPK() {
-        return miembroProyectoPK;
-    }
-
-    public void setMiembroProyectoPK(MiembroProyectoPK miembroProyectoPK) {
-        this.miembroProyectoPK = miembroProyectoPK;
+    public void setMembresia(MiembroProyectoPK membresia) {
+        this.membresia = membresia;
     }
 
     public Date getFechaMembresia() {
@@ -100,14 +91,6 @@ public class MiembroProyecto implements Serializable {
         this.estado = estado;
     }
 
-    public Proyecto getProyecto1() {
-        return proyecto1;
-    }
-
-    public void setProyecto1(Proyecto proyecto1) {
-        this.proyecto1 = proyecto1;
-    }
-
     public RolProyecto getRol() {
         return rol;
     }
@@ -116,18 +99,10 @@ public class MiembroProyecto implements Serializable {
         this.rol = rol;
     }
 
-    public Usuario getUsuario1() {
-        return usuario1;
-    }
-
-    public void setUsuario1(Usuario usuario1) {
-        this.usuario1 = usuario1;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (miembroProyectoPK != null ? miembroProyectoPK.hashCode() : 0);
+        hash += (membresia != null ? membresia.hashCode() : 0);
         return hash;
     }
 
@@ -138,7 +113,7 @@ public class MiembroProyecto implements Serializable {
             return false;
         }
         MiembroProyecto other = (MiembroProyecto) object;
-        if ((this.miembroProyectoPK == null && other.miembroProyectoPK != null) || (this.miembroProyectoPK != null && !this.miembroProyectoPK.equals(other.miembroProyectoPK))) {
+        if ((this.membresia == null && other.membresia != null) || (this.membresia != null && !this.membresia.equals(other.membresia))) {
             return false;
         }
         return true;
@@ -146,7 +121,7 @@ public class MiembroProyecto implements Serializable {
 
     @Override
     public String toString() {
-        return "py.fpuna.is2.proyectos.alpha.model.MiembroProyecto[ miembroProyectoPK=" + miembroProyectoPK + " ]";
+        return "py.fpuna.is2.proyectos.alpha.model.MiembroProyecto[ membresia=" + membresia + " ]";
     }
     
 }
