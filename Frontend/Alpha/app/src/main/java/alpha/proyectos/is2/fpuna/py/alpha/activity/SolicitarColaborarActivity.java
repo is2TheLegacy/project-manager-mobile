@@ -70,7 +70,7 @@ public class SolicitarColaborarActivity extends AppCompatActivity implements Cal
         final String idPropietario = getIntent().getStringExtra("EXTRA_ID_PROPIETARIO");
 
         contenidoView = (EditText) findViewById(R.id.contenido);
-        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
 
         crearButton = (Button) findViewById(R.id.button_guardar);
         crearButton.setOnClickListener(new OnClickListener() {

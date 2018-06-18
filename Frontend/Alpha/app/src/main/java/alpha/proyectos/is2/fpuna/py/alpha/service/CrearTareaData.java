@@ -24,6 +24,7 @@ public class CrearTareaData {
     private Usuario usuarioCreador;
     private Proyecto proyecto;
     private Hito hito;
+    private Long fechaCreacion;
 
     public CrearTareaData() {
     }
@@ -40,6 +41,7 @@ public class CrearTareaData {
         this.prioridad = tarea.getPrioridad();
         this.proyecto = tarea.getProyecto();
         this.usuarioCreador = tarea.getUsuarioCreador();
+        this.fechaCreacion = tarea.getFechaCreacion();
     }
 
     public CrearTareaData(UUID id, String nombre, String descripcion, Date fechaEstimadaInicio,
@@ -60,15 +62,24 @@ public class CrearTareaData {
         this.usuarioCreador = usuarioCreador;
     }
 
-    public CrearTareaData(UUID id, Long fechaInicio, Long fechaFin,
-                          String estado, Short porcentaje, Hito hito) {
+    public CrearTareaData(UUID id, String nombre, String descripcion, Long fechaInicio, Long fechaFin,
+                          String estado, Short porcentaje, Hito hito, String prioridad, Long fechaEstimadaInicio,
+                          Long fechaEstimadaFin, Long fechaCreacion, Proyecto proyecto, Usuario usuarioCreador) {
 
         this.idTarea = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.estado = estado;
         this.porcentajeRealizado = porcentaje;
         this.hito = hito;
+        this.prioridad = prioridad;
+        this.fechaEstimadaInicio = fechaEstimadaInicio;
+        this.fechaEstimadaFin = fechaEstimadaFin;
+        this.fechaCreacion = fechaCreacion;
+        this.proyecto = proyecto;
+        this.usuarioCreador = usuarioCreador;
     }
 
     public UUID getIdTarea() {
@@ -181,5 +192,13 @@ public class CrearTareaData {
 
     public void setHito(Hito hito) {
         this.hito = hito;
+    }
+
+    public Long getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Long fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 }

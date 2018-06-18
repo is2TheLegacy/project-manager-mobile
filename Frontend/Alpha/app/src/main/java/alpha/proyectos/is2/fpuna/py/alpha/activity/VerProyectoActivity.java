@@ -18,6 +18,7 @@ import java.util.UUID;
 import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +28,7 @@ public class VerProyectoActivity extends AppCompatActivity {
 
     private ProyectoService service;
     private String idProyecto;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class VerProyectoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
         idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
         final String nombre = getIntent().getStringExtra("EXTRA_NOMBRE");
         final String estado = getIntent().getStringExtra("EXTRA_ESTADO");

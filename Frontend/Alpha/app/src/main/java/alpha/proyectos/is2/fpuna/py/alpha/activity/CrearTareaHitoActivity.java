@@ -66,7 +66,7 @@ public class CrearTareaHitoActivity extends AppCompatActivity
     private ProyectoService proyectoService;
     private UUID uuid;
     private final Activity mContext = this;
-    private PreferenceUtils preferenceUtils;
+    //private PreferenceUtils preferenceUtils;
 
     private String idHito;
     private String idProyecto;
@@ -82,6 +82,8 @@ public class CrearTareaHitoActivity extends AppCompatActivity
     private Usuario usuarioAsignado;
     private String prioridad;
 
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -89,7 +91,7 @@ public class CrearTareaHitoActivity extends AppCompatActivity
         setContentView(R.layout.activity_crear_tarea_hito);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        preferenceUtils = new PreferenceUtils(CrearTareaHitoActivity.this);
+
 
         idHito = getIntent().getStringExtra("EXTRA_ID_HITO");
         idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
@@ -100,8 +102,8 @@ public class CrearTareaHitoActivity extends AppCompatActivity
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
 
         service = (TareaService) ServiceBuilder.create(TareaService.class, preferenceUtils.getAuthToken());
-        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
-        proyectoService = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class, preferenceUtils.getAuthToken());
+        proyectoService = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
 
         usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {
             @Override

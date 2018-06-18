@@ -48,6 +48,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,6 +81,11 @@ public class EditarTareaActivity extends AppCompatActivity
     private String nombre;
     private String descripcion;
     private String estadoActual;
+    private String prioridad;
+    private Long fechaCreacion;
+    private Long fechaEstimadaInicio;
+    private Long fechaEstimadaFin;
+    private String usuarioCreador;
 
     private Date fechaInicio;
     private Date fechaFin;
@@ -89,6 +95,7 @@ public class EditarTareaActivity extends AppCompatActivity
     private String estado;
     private short porcentaje;
     private Hito hito;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,18 +112,23 @@ public class EditarTareaActivity extends AppCompatActivity
 
         idTarea = getIntent().getStringExtra("EXTRA_ID_TAREA");
         idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
+
         final String idHito = getIntent().getStringExtra("EXTRA_ID_HITO");
         nombre = getIntent().getStringExtra("EXTRA_NOMBRE");
         estadoActual = getIntent().getStringExtra("EXTRA_ESTADO");
         descripcion = getIntent().getStringExtra("EXTRA_DESCRIPCION");
+        prioridad = getIntent().getStringExtra("EXTRA_PRIORIDAD");
+        usuarioCreador = getIntent().getStringExtra("EXTRA_USUARIO_CREADOR");
+        fechaEstimadaInicio = getIntent().getLongExtra("EXTRA_FECHA_ESTIMADA_INICO", 0L);
+        fechaCreacion = getIntent().getLongExtra("EXTRA_FECHA_CREACION", 0L);
         System.err.println("Id tarea : " + idTarea);
 
         nombreView.setText(nombre);
         descripcionView.setText(descripcion);
 
-        service = (TareaService) ServiceBuilder.create(TareaService.class);
-        hitoService = (HitoService) ServiceBuilder.create(HitoService.class);
-        proyectoService = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        service = (TareaService) ServiceBuilder.create(TareaService.class, preferenceUtils.getAuthToken());
+        hitoService = (HitoService) ServiceBuilder.create(HitoService.class, preferenceUtils.getAuthToken());
+        proyectoService = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
 
         // Estados
         final List<String> estados = new ArrayList<String>();
@@ -299,14 +311,25 @@ public class EditarTareaActivity extends AppCompatActivity
             cancel = true;
         }*/
 
+        Long fechaFinalizacion = null;
+        if (fechaFin != null) {
+            fechaFinalizacion = fechaFin.getTime();
+        }
+
         if (cancel) {
             focusView.requestFocus();
             guardarTareaButton.setEnabled(true);
             guardarTareaButton.setText(R.string.action_guardar);
         } else {
-            System.err.println("Id tarea : " + idTarea);
+            System.err.println("Editar tarea : " + prioridad);
+            System.err.println("Editar tarea : " + fechaCreacion);
             UUID id = UUID.fromString(idTarea);
-            CrearTareaData tarea = new CrearTareaData(id, fechaInicio.getTime(), fechaFin.getTime(), estado, porcentaje, hito);
+            UUID uuidProyecto = UUID.fromString(idProyecto);
+            Proyecto proyecto = new Proyecto(uuidProyecto);
+            Usuario usuario = new Usuario(usuarioCreador);
+            CrearTareaData tarea = new CrearTareaData(id, nombre, descripcion, fechaInicio.getTime(),
+                    fechaFinalizacion, estado, porcentaje, hito, prioridad, fechaEstimadaInicio, fechaEstimadaFin,
+                    fechaCreacion, proyecto, usuario);
             Call<ResponseBody> call = service.editar(id, tarea);
             call.enqueue(this);
         }

@@ -42,6 +42,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.CategoriaProyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Proyecto;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,6 +59,7 @@ public class EditarProyectoActivity extends AppCompatActivity
     private CategoriaProyectoService categoriasService;
     private UsuarioService usuarioService;
     private final Activity mContext = this;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     private EditText nombreView;
     private EditText descripcionView;
@@ -101,9 +103,9 @@ public class EditarProyectoActivity extends AppCompatActivity
         descripcionView.setText(descripcion);
         fechaFinView.setText(fechaFinProyecto);
 
-        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
-        categoriasService = (CategoriaProyectoService) ServiceBuilder.create(CategoriaProyectoService.class);
-        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
+        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
+        categoriasService = (CategoriaProyectoService) ServiceBuilder.create(CategoriaProyectoService.class, preferenceUtils.getAuthToken());
+        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class, preferenceUtils.getAuthToken());
 
         // Listar usuarios
         usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {

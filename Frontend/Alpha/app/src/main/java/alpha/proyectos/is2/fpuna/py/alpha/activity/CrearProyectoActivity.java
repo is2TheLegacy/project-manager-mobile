@@ -42,6 +42,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,16 +64,17 @@ public class CrearProyectoActivity extends AppCompatActivity
     private UsuarioService usuarioService;
     private UUID uuid;
     private final Activity mContext = this;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     private EditText nombreView;
     private EditText descripcionView;
     private EditText fechaFinView;
-    private Spinner propietarioView;
+    //private Spinner propietarioView;
     private Spinner categoriaView;
 
     private Date fechaFin;
     private CategoriaProyecto categoria;
-    private Usuario propietario;
+    //private Usuario propietario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,15 +86,15 @@ public class CrearProyectoActivity extends AppCompatActivity
         nombreView = (EditText) findViewById(R.id.nombre);
         descripcionView = (EditText) findViewById(R.id.descripcion);
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
-        propietarioView = (Spinner) findViewById(R.id.usuarios_spinner);
+        //propietarioView = (Spinner) findViewById(R.id.usuarios_spinner);
         categoriaView = (Spinner) findViewById(R.id.categoria_spinner);
 
-        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
-        categoriasService = (CategoriaProyectoService) ServiceBuilder.create(CategoriaProyectoService.class);
-        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
+        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
+        categoriasService = (CategoriaProyectoService) ServiceBuilder.create(CategoriaProyectoService.class, preferenceUtils.getAuthToken());
+        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class, preferenceUtils.getAuthToken());
 
         // Listar usuarios
-        usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {
+        /*usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {
             @Override
             public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
                 List<String> nombreUsuarios = new ArrayList<String>();
@@ -122,7 +124,7 @@ public class CrearProyectoActivity extends AppCompatActivity
             public void onFailure(Call<List<Usuario>> call, Throwable t) {
                 ;
             }
-        });
+        });*/
 
         // Listar categorias
         categoriasService.listar().enqueue(new Callback<List<CategoriaProyecto>>() {
@@ -215,12 +217,12 @@ public class CrearProyectoActivity extends AppCompatActivity
             fechaFinView.setError(getString(R.string.error_field_required));
             focusView = fechaFinView;
             cancel = true;
-        }  else if (propietario == null) {
+        }  /*else if (propietario == null) {
             Toast.makeText(CrearProyectoActivity.this, "Debe seleccionar el propietario del proyecto",
                     Toast.LENGTH_SHORT).show();
             focusView = propietarioView;
             cancel = true;
-        }  else if (categoria == null) {
+        }*/  else if (categoria == null) {
             Toast.makeText(CrearProyectoActivity.this, "Debe seleccionar la categoria del proyecto",
                     Toast.LENGTH_SHORT).show();
             focusView = categoriaView;
@@ -233,6 +235,7 @@ public class CrearProyectoActivity extends AppCompatActivity
             cearProyectoButton.setText(R.string.action_guardar);
         } else {
             uuid = UUID.randomUUID();
+            Usuario propietario = preferenceUtils.getUsuarioLogueado();
             Proyecto proyecto = new Proyecto(uuid, nombre, descripcion, fechaFin.getTime(), propietario, categoria);
             Call<ResponseBody> call = service.crear(proyecto);
             call.enqueue(this);

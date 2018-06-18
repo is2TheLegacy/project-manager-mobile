@@ -28,6 +28,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.HitoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.SolicitudesColaboracion;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Hito;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +43,7 @@ public class SolicitudesActivity extends AppCompatActivity implements Callback<L
     private SolicitudesAdapter mAdapter;
     private ProgressBar progressBar;
     private LinearLayout sinDatos;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class SolicitudesActivity extends AppCompatActivity implements Callback<L
         sinDatos = (LinearLayout) findViewById(R.id.sin_datos_content);
 
         UUID uuidProyecto = UUID.fromString(idProyecto);
-        ProyectoService service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        ProyectoService service = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
         Call<List<SolicitudesColaboracion>> call = service.listarSolicitudes(uuidProyecto);
         call.enqueue(this);
     }

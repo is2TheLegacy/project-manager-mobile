@@ -118,7 +118,7 @@ public class EditarHitoActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        service = (HitoService) ServiceBuilder.create(HitoService.class);
+        service = (HitoService) ServiceBuilder.create(HitoService.class, preferenceUtils.getAuthToken());
 
         guardarButton = (Button) findViewById(R.id.button_guardar);
         guardarButton.setOnClickListener(new OnClickListener() {

@@ -93,9 +93,9 @@ public class CrearTareaActivity extends AppCompatActivity
         fechaInicioView = (EditText) findViewById(R.id.fechaInicio);
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
 
-        service = (TareaService) ServiceBuilder.create(TareaService.class);
-        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
-        proyectoService = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        service = (TareaService) ServiceBuilder.create(TareaService.class, preferenceUtils.getAuthToken());
+        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class, preferenceUtils.getAuthToken());
+        proyectoService = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
 
         usuarioService.getAll().enqueue(new Callback<List<Usuario>>() {
             @Override

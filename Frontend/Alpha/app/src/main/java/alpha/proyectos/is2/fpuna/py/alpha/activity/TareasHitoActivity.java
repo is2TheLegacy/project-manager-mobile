@@ -1,8 +1,10 @@
 package alpha.proyectos.is2.fpuna.py.alpha.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,9 +28,13 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.HitoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.TareaService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
 
 /**
  * Pantalla de listado de tareas
@@ -44,6 +50,7 @@ public class TareasHitoActivity extends AppCompatActivity implements Callback<Li
     private TareaService tareaService;
     private String idHito;
     private String idProyecto;
+    private PreferenceUtils preferenceUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +58,12 @@ public class TareasHitoActivity extends AppCompatActivity implements Callback<Li
         setContentView(R.layout.activity_tareas_hito);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        preferenceUtils = new PreferenceUtils(TareasHitoActivity.this);
 
         progressBar = (ProgressBar) findViewById(R.id.progressbar_login);
         mRecyclerView = getRecyclerView(R.id.my_recycler_view);
         sinDatos = (LinearLayout) findViewById(R.id.sin_datos_content);
-        tareaService = (TareaService) ServiceBuilder.create(TareaService.class);
+        tareaService = (TareaService) ServiceBuilder.create(TareaService.class, preferenceUtils.getAuthToken());
         idHito = getIntent().getStringExtra("EXTRA_ID_HITO");
         idProyecto = getIntent().getStringExtra("EXTRA_ID_PROYECTO");
 
@@ -76,19 +84,39 @@ public class TareasHitoActivity extends AppCompatActivity implements Callback<Li
             public void onClick(View view) {
                 if (mAdapter != null && mAdapter.getTareasSeleccionadas() != null) {
                     List<Integer> seleccionadas = mAdapter.getTareasSeleccionadas();
-                    System.err.println("Seleccionados : " + seleccionadas.size());
+                    System.err.println("Quitar tarea Seleccionados : " + seleccionadas.size());
                     for (int i = 0; i < seleccionadas.size(); i++) {
                         Tarea tarea = tareas.get(seleccionadas.get(i));
                         UUID id = tarea.getIdTarea();
                         CrearTareaData datos = new CrearTareaData(tarea);
-                        tareaService.editar(id, datos);
-                        System.err.println("Seleccionados : " + tareas.get(seleccionadas.get(i)).getNombre());
+                        datos.setHito(null);
+                        Call<ResponseBody> call = tareaService.editar(id, datos);
+                        call.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.isSuccessful()) {
+                                    System.err.println("Quitar tarea funciono");
+                                    showMessageSuccess("Exitoso", "Operacion realizada exitosamente");
+                                } else {
+                                    ResponseBody body = response.errorBody();
+                                    String json = slurp(body.byteStream(), 1024);
+                                    System.err.println("Quitar tarea error : " + json);
+                                    showMessageSuccess("Error", "Ocurrio un error al realizar la operacion");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                System.err.println("Quitar tarea error : " + t.getMessage());
+                            }
+                        });
+                        System.err.println("Quitar tarea Seleccionados : " + tareas.get(seleccionadas.get(i)).getNombre());
                     }
                 }
             }
         });
 
-        HitoService service = (HitoService) ServiceBuilder.create(HitoService.class);
+        HitoService service = (HitoService) ServiceBuilder.create(HitoService.class, preferenceUtils.getAuthToken());
         UUID uuidHito = UUID.fromString(idHito);
         Call<List<Tarea>> call = service.listarTareas(uuidHito);
         call.enqueue(this);
@@ -139,6 +167,31 @@ public class TareasHitoActivity extends AppCompatActivity implements Callback<Li
         divider.setDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.line_separator));
         mRecyclerView.addItemDecoration(divider);
         return mRecyclerView;
+    }
+
+    private void showMessageSuccess(String titulo, String mensaje) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(mensaje).setTitle(titulo);
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showMessage(String titulo, String mensaje) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(mensaje).setTitle(titulo);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

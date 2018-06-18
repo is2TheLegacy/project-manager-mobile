@@ -43,7 +43,8 @@ public class DashboardActivity extends BaseActivity {
     private LinearLayout sinProyectosContent2;
     private TextView sinProyectosText1;
     private TextView sinProyectosText2;
-    private PreferenceUtils preferenceUtils;
+    //private PreferenceUtils preferenceUtils;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     private UsuarioService service;
     public static boolean recargar = false;
@@ -52,9 +53,10 @@ public class DashboardActivity extends BaseActivity {
     protected void inint() {
         loadLayout(R.layout.activity_dashboard, "Dashboard");
 
-        preferenceUtils = new PreferenceUtils(DashboardActivity.this);
+        //preferenceUtils = new PreferenceUtils(DashboardActivity.this);
         String tokenFirebase = preferenceUtils.getTokenFirebase();
         System.err.println("Token firebase : " + tokenFirebase);
+        System.err.println("Token  : " + preferenceUtils.getAuthToken());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
@@ -72,7 +74,7 @@ public class DashboardActivity extends BaseActivity {
         sinProyectosContent2 = (LinearLayout) findViewById(R.id.sin_proyectos_content_2);
         sinProyectosText1 = (TextView) findViewById(R.id.sin_proyectos_text_1);
         sinProyectosText2 = (TextView) findViewById(R.id.sin_proyectos_text_2);
-        service = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
+        service = (UsuarioService) ServiceBuilder.create(UsuarioService.class, preferenceUtils.getAuthToken());
         cargarDatos();
 
     }

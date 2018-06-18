@@ -22,6 +22,7 @@ import java.util.UUID;
 import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +34,7 @@ public class DatosSolicitudActivity extends AppCompatActivity implements Callbac
 
     private ProyectoService service;
     private String idSolicitud;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,7 @@ public class DatosSolicitudActivity extends AppCompatActivity implements Callbac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class);
+        service = (ProyectoService) ServiceBuilder.create(ProyectoService.class, preferenceUtils.getAuthToken());
         idSolicitud = getIntent().getStringExtra("EXTRA_ID_SOLICITUD");
         final String mensaje = getIntent().getStringExtra("EXTRA_MENSAJE");
         final String datosUsuario = getIntent().getStringExtra("EXTRA_DATOS_USUARIO");

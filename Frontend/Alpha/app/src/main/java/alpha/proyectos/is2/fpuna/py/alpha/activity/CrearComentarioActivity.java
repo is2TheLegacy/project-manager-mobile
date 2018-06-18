@@ -36,6 +36,7 @@ import alpha.proyectos.is2.fpuna.py.alpha.service.ProyectoService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +52,7 @@ public class CrearComentarioActivity extends AppCompatActivity implements Callba
 	private Button crearButton;
     private TareaService service;
     private UUID uuid;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     private EditText contenidoView;
 
@@ -63,7 +65,7 @@ public class CrearComentarioActivity extends AppCompatActivity implements Callba
         final String idTarea = getIntent().getStringExtra("EXTRA_ID_TAREA");
 
         contenidoView = (EditText) findViewById(R.id.contenido);
-        service = (TareaService) ServiceBuilder.create(TareaService.class);
+        service = (TareaService) ServiceBuilder.create(TareaService.class, preferenceUtils.getAuthToken());
 
         crearButton = (Button) findViewById(R.id.button_guardar);
         crearButton.setOnClickListener(new OnClickListener() {

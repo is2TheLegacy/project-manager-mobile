@@ -85,13 +85,20 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
                 Intent intent = new Intent(mContext, EditarTareaActivity.class);
                 System.err.println("Id tarea adapter : " + tarea.getIdTarea());
                 intent.putExtra("EXTRA_ID_TAREA", tarea.getIdTarea().toString());
+                intent.putExtra("EXTRA_ID_TAREA", tarea.getIdTarea().toString());
                 intent.putExtra("EXTRA_ID_PROYECTO", tarea.getProyecto().getIdProyecto().toString());
+                intent.putExtra("EXTRA_USUARIO_CREADOR", tarea.getUsuarioCreador().getIdUsuario());
                 if (tarea.getHito() != null) {
                     intent.putExtra("EXTRA_ID_HITO", tarea.getHito().getIdHito().toString());
                 }
                 intent.putExtra("EXTRA_NOMBRE", tarea.getNombre());
                 intent.putExtra("EXTRA_DESCRIPCION", tarea.getDescripcion());
+                System.err.println("Editar tarea : " + tarea.getPrioridad());
+                intent.putExtra("EXTRA_PRIORIDAD", tarea.getPrioridad());
                 intent.putExtra("EXTRA_ESTADO", tarea.getEstado());
+                intent.putExtra("EXTRA_FECHA_ESTIMADA_INICO", tarea.getFechaEstimadaInicio().getTime());
+                intent.putExtra("EXTRA_FECHA_ESTIMADA_FIN", tarea.getFechaEstimadaFin().getTime());
+                intent.putExtra("EXTRA_FECHA_CREACION", tarea.getFechaCreacion());
                 //intent.putExtra("EXTRA_FECHA_ESTIMADA_FIN", sdf.format(tarea.getFechaEstimadaFin()));
                 mContext.startActivity(intent);
             }

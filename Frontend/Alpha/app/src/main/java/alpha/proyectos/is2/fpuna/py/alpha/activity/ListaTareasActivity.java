@@ -1,6 +1,8 @@
 package alpha.proyectos.is2.fpuna.py.alpha.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -16,10 +18,16 @@ import alpha.proyectos.is2.fpuna.py.alpha.R;
 import alpha.proyectos.is2.fpuna.py.alpha.adapter.TareasAdapter;
 import alpha.proyectos.is2.fpuna.py.alpha.service.ServiceBuilder;
 import alpha.proyectos.is2.fpuna.py.alpha.service.TareaService;
+import alpha.proyectos.is2.fpuna.py.alpha.service.UsuarioService;
 import alpha.proyectos.is2.fpuna.py.alpha.service.model.Tarea;
+import alpha.proyectos.is2.fpuna.py.alpha.service.usuarios.Usuario;
+import alpha.proyectos.is2.fpuna.py.alpha.utils.PreferenceUtils;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static alpha.proyectos.is2.fpuna.py.alpha.utils.StringUtils.slurp;
 
 /**
  * Pantalla de listado de tareas
@@ -33,6 +41,7 @@ public class ListaTareasActivity extends BaseActivity implements Callback<List<T
     private LinearLayout sinDatos;
     private List<Tarea> tareas;
     private TareaService service;
+    final PreferenceUtils preferenceUtils = new PreferenceUtils(this);
 
     @Override
     protected void inint() {
@@ -41,7 +50,7 @@ public class ListaTareasActivity extends BaseActivity implements Callback<List<T
         progressBar = (ProgressBar) findViewById(R.id.progressbar_login);
         mRecyclerView = getRecyclerView(R.id.my_recycler_view);
         sinDatos = (LinearLayout) findViewById(R.id.sin_datos_content);
-        service = (TareaService) ServiceBuilder.create(TareaService.class);
+        service = (TareaService) ServiceBuilder.create(TareaService.class, preferenceUtils.getAuthToken());
 
         Button agregarBtn = (Button) findViewById(R.id.action_agregar);
         agregarBtn.setOnClickListener(new View.OnClickListener() {
@@ -60,14 +69,34 @@ public class ListaTareasActivity extends BaseActivity implements Callback<List<T
                 System.err.println("Seleccionados : " + seleccionadas.size());
                 for (int i = 0; i < seleccionadas.size(); i++) {
                     UUID id = tareas.get(seleccionadas.get(i)).getIdTarea();
-                    service.eliminar(id);
+                    Call<ResponseBody> call = service.eliminar(id);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                System.err.println("Eliminar tarea funciono");
+                                showMessageSuccess("Exitoso", "Tarea eliminada exitosamente");
+                            } else {
+                                ResponseBody body = response.errorBody();
+                                String json = slurp(body.byteStream(), 1024);
+                                System.err.println("Eliminar tarea error : " + json);
+                                showMessageSuccess("Error", "Ocurrio un error al realizar la operacion");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            System.err.println("Quitar tarea error : " + t.getMessage());
+                        }
+                    });
                     System.err.println("Seleccionados : " + tareas.get(seleccionadas.get(i)).getNombre());
                 }
             }
         });
 
-        TareaService service = (TareaService) ServiceBuilder.create(TareaService.class);
-        Call<List<Tarea>> call = service.listar();
+        Usuario usuario = preferenceUtils.getUsuarioLogueado();
+        UsuarioService service = (UsuarioService) ServiceBuilder.create(UsuarioService.class, preferenceUtils.getAuthToken());
+        Call<List<Tarea>> call = service.getTareas(usuario.getIdUsuario());
         call.enqueue(this);
     }
 

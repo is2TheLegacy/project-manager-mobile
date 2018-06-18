@@ -16,6 +16,7 @@ public class Tarea {
     private Date fechaFin;
 	private Date fechaEstimadaInicio;
 	private Date fechaEstimadaFin;
+	private Long fechaCreacion;
     private short porcentajeRealizado;
     private Usuario usuarioAsignado;
     private Usuario usuarioCreador;
@@ -158,5 +159,13 @@ public class Tarea {
 
     public void setHito(Hito hito) {
         this.hito = hito;
+    }
+
+    public Long getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Long fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 }

@@ -87,8 +87,8 @@ public class CrearHitoActivity extends AppCompatActivity
         fechaInicioView = (EditText) findViewById(R.id.fechaInicio);
         fechaFinView = (EditText) findViewById(R.id.fechaFin);
 
-        service = (HitoService) ServiceBuilder.create(HitoService.class);
-        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class);
+        service = (HitoService) ServiceBuilder.create(HitoService.class, preferenceUtils.getAuthToken());
+        usuarioService = (UsuarioService) ServiceBuilder.create(UsuarioService.class, preferenceUtils.getAuthToken());
 
         cearHitoButton = (Button) findViewById(R.id.button_guardar);
         cearHitoButton.setOnClickListener(new OnClickListener() {
