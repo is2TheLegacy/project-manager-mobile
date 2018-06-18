@@ -5,13 +5,8 @@
  */
 package py.fpuna.is2.proyectos.alpha.business.services.notificaciones;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -27,7 +22,7 @@ public class FirebaseClientProducer {
         .maxPooledPerRoute(5)
         .build();
     
-    @Produces @RequestScoped
+    @Produces
     public Firebase createFirebaseClient() {
         ResteasyWebTarget target = CLIENT.target("https://fcm.googleapis.com");
         return target.proxy(Firebase.class);

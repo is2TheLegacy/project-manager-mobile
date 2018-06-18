@@ -28,7 +28,7 @@ import py.fpuna.is2.proyectos.alpha.business.model.Tarea;
 import py.fpuna.is2.proyectos.alpha.business.services.AbstractFacade;
 import py.fpuna.is2.proyectos.alpha.business.services.notificaciones.Notification;
 import py.fpuna.is2.proyectos.alpha.business.services.notificaciones.NotificationEvent;
-import py.fpuna.is2.proyectos.alpha.business.services.security.UserAuthorizator;
+import py.fpuna.is2.proyectos.alpha.business.services.notificaciones.NotificationService;
 
 /**
  *
@@ -47,7 +47,7 @@ public class TareaService extends AbstractFacade<Tarea> {
     private UUID token;
 
     @Inject
-    private Event<NotificationEvent> events;
+    private NotificationService notifications;
     
     public TareaService() {
         super(Tarea.class);
@@ -68,8 +68,8 @@ public class TareaService extends AbstractFacade<Tarea> {
             }
             
             if(entity.getUsuarioAsignado() != null) {
-               /* NotificationEvent notificationEvt = new NotificationEvent();
-                notificationEvt.setSessionToken(token);
+                NotificationEvent notificationEvt = new NotificationEvent();
+                notificationEvt.setUsuarioDestino(entity.getUsuarioAsignado());
                 
                 Notification notificacion = new Notification();
                 notificacion.setText("Nueva tarea asignada.");
@@ -77,7 +77,7 @@ public class TareaService extends AbstractFacade<Tarea> {
                 notificacion.setSound("default");
                 notificationEvt.setNotification(notificacion);
                 
-                events.fire(notificationEvt);*/
+                notifications.handleNotification(notificationEvt);
             
             }
         }

@@ -7,21 +7,22 @@ package py.fpuna.is2.proyectos.alpha.business.services.notificaciones;
 
 import java.io.Serializable;
 import java.util.UUID;
+import py.fpuna.is2.proyectos.alpha.business.model.Usuario;
 
 /**
  *
  * @author rafae
  */
 public class NotificationEvent implements Serializable {
-    private UUID sessionToken;
+    private Usuario usuarioDestino;
     private Notification notification;
 
-    public UUID getSessionToken() {
-        return sessionToken;
+    public Usuario getUsuarioDestino() {
+        return usuarioDestino;
     }
 
-    public void setSessionToken(UUID sessionToken) {
-        this.sessionToken = sessionToken;
+    public void setUsuarioDestino(Usuario usuarioDestino) {
+        this.usuarioDestino = usuarioDestino;
     }
 
     public Notification getNotification() {
