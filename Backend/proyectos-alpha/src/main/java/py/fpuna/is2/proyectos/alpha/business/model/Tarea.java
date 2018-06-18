@@ -48,7 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Tarea.findByFechaInicio", query = "SELECT t FROM Tarea t WHERE t.fechaInicio = :fechaInicio")
     , @NamedQuery(name = "Tarea.findByFechaEstimadaFin", query = "SELECT t FROM Tarea t WHERE t.fechaEstimadaFin = :fechaEstimadaFin")
     , @NamedQuery(name = "Tarea.findByFechaEstimadaInicio", query = "SELECT t FROM Tarea t WHERE t.fechaEstimadaInicio = :fechaEstimadaInicio")
-    , @NamedQuery(name = "Tarea.findByHito", query = "SELECT t FROM Tarea t WHERE t.hito.idHito = :idHito")})
+    , @NamedQuery(name = "Tarea.findByHito", query = "SELECT t FROM Tarea t WHERE t.hito.idHito = :idHito")
+    , @NamedQuery(name = "Tarea.findByUser", query = "SELECT t FROM Tarea t WHERE t.usuarioAsignado.idUsuario = :idUsuario ORDER BY t.fechaCreacion DESC")})
 public class Tarea implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tarea")

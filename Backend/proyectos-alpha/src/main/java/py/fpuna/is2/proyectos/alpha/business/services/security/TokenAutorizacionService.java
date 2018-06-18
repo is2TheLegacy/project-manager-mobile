@@ -70,4 +70,18 @@ public class TokenAutorizacionService extends AbstractFacade<TokenAutorizacion> 
         q.setParameter("idUsuario", user.getIdUsuario());
         return q.getResultList();
     }
+
+    public boolean esTokenValido(String authToken) {
+        try {
+            UUID t = UUID.fromString(authToken);
+            Query q = em.createNamedQuery("TokenAutorizacion.findActiveToken", TokenAutorizacion.class);
+            q.setParameter("token", t);
+            TokenAutorizacion token = (TokenAutorizacion)q.getSingleResult();
+            return token != null;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+    }
 }
