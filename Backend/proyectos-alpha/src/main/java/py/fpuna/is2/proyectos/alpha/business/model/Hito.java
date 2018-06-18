@@ -15,7 +15,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -41,7 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Hito.findByDescripcion", query = "SELECT h FROM Hito h WHERE h.descripcion = :descripcion")
     , @NamedQuery(name = "Hito.findByFechaInicio", query = "SELECT h FROM Hito h WHERE h.fechaInicio = :fechaInicio")
     , @NamedQuery(name = "Hito.findByFechaEstimadaFin", query = "SELECT h FROM Hito h WHERE h.fechaEstimadaFin = :fechaEstimadaFin")
-    , @NamedQuery(name = "Hito.findByFechaRealFin", query = "SELECT h FROM Hito h WHERE h.fechaRealFin = :fechaRealFin")})
+    , @NamedQuery(name = "Hito.findByFechaRealFin", query = "SELECT h FROM Hito h WHERE h.fechaRealFin = :fechaRealFin")
+    , @NamedQuery(name = "Hito.findByProyecto", query = "SELECT h FROM Hito h WHERE h.proyecto.idProyecto = :idProyecto")})
 public class Hito implements Serializable {
 
     @JsonIgnore
@@ -75,11 +75,9 @@ public class Hito implements Serializable {
     @Column(name = "fecha_real_fin")
     @Temporal(TemporalType.DATE)
     private Date fechaRealFin;
-    @JsonIgnore
     @JoinColumn(name = "proyecto", referencedColumnName = "id_proyecto")
     @ManyToOne(optional = false)
     private Proyecto proyecto;
-    @JsonIgnore
     @JoinColumn(name = "usuario_creador", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario usuarioCreador;

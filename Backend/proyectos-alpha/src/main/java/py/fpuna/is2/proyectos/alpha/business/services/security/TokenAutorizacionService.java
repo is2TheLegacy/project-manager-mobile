@@ -10,8 +10,11 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.PathParam;
+import py.fpuna.is2.proyectos.alpha.business.model.Hito;
 import py.fpuna.is2.proyectos.alpha.business.model.TokenAutorizacion;
+import py.fpuna.is2.proyectos.alpha.business.model.Usuario;
 import py.fpuna.is2.proyectos.alpha.business.services.AbstractFacade;
 
 /**
@@ -60,5 +63,11 @@ public class TokenAutorizacionService extends AbstractFacade<TokenAutorizacion> 
     @Override
     protected EntityManager getEntityManager() {
         return em;
-    }    
+    }
+
+    public List<TokenAutorizacion> findActiveSessions(Usuario user) {
+        Query q = em.createNamedQuery("TokenAutorizacion.findActiveSessionsOfUser", TokenAutorizacion.class);
+        q.setParameter("idUsuario", user.getIdUsuario());
+        return q.getResultList();
+    }
 }

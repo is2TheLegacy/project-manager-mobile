@@ -24,10 +24,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import py.fpuna.is2.proyectos.alpha.business.model.MiembroProyecto;
+import py.fpuna.is2.proyectos.alpha.business.model.Proyecto;
 import py.fpuna.is2.proyectos.alpha.business.model.Usuario;
 import py.fpuna.is2.proyectos.alpha.business.services.AbstractFacade;
 import py.fpuna.is2.proyectos.alpha.business.services.assertions.ServiceAssertions;
 import py.fpuna.is2.proyectos.alpha.business.services.exceptions.ApplicationException;
+import py.fpuna.is2.proyectos.alpha.business.services.proyectos.EstadosMembresia;
 import py.fpuna.is2.proyectos.alpha.business.services.security.UserAuthorizator;
 import py.fpuna.is2.proyectos.alpha.utils.SecurityUtil;
 import py.fpuna.is2.proyectos.alpha.utils.SecurityException;
@@ -86,7 +89,7 @@ public class UsuarioService extends AbstractFacade<Usuario> {
     @GET
     @Override
     public List<Usuario> findAll() {
-        return super.findAll();
+         return super.findAll();
     }
 
     @GET
@@ -138,5 +141,22 @@ public class UsuarioService extends AbstractFacade<Usuario> {
     @Override
     protected EntityManager getEntityManager() {
         return em;
-    }    
+    }
+
+    @GET
+    @Path("{idUsuario}/proyectos/colaborando")
+    public List<MiembroProyecto> listOwnProjects(@PathParam("idUsuario")UUID idUsuario) {
+        Query q = em.createNamedQuery("MiembroProyecto.findByUsuario", MiembroProyecto.class);
+        q.setParameter("idUsuario", idUsuario);
+        q.setParameter("estado", EstadosMembresia.ACTIVO);
+        return q.getResultList();
+    }
+    
+    @GET
+    @Path("{idUsuario}/proyectos/propios")
+    public List<Proyecto> listColaborations(@PathParam("idUsuario")UUID idUsuario) {
+        Query q = em.createNamedQuery("Proyecto.findByPropietario", Proyecto.class);
+        q.setParameter("idUsuario", idUsuario);
+        return q.getResultList();
+    }
 }
