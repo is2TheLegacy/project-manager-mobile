@@ -127,5 +127,5 @@ public class TareaService extends AbstractFacade<Tarea> {
     @Override
     protected EntityManager getEntityManager() {
         return em;
-    }    
+    }
 }

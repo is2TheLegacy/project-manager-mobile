@@ -26,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import py.fpuna.is2.proyectos.alpha.business.model.MiembroProyecto;
 import py.fpuna.is2.proyectos.alpha.business.model.Proyecto;
+import py.fpuna.is2.proyectos.alpha.business.model.Tarea;
 import py.fpuna.is2.proyectos.alpha.business.model.Usuario;
 import py.fpuna.is2.proyectos.alpha.business.services.AbstractFacade;
 import py.fpuna.is2.proyectos.alpha.business.services.assertions.ServiceAssertions;
@@ -158,5 +159,13 @@ public class UsuarioService extends AbstractFacade<Usuario> {
         Query q = em.createNamedQuery("Proyecto.findByPropietario", Proyecto.class);
         q.setParameter("idUsuario", idUsuario);
         return q.getResultList();
+    }
+    
+    @GET
+    @Path("{idUsuario}/tareas")
+    public List<Tarea> getAllTaskOfUser(@PathParam("idUsuario")UUID idUsuario) {
+        Query q = em.createNamedQuery("Tarea.findByUser", Tarea.class);
+        q.setParameter("idUsuario", idUsuario);
+        return q.getResultList();   
     }
 }
